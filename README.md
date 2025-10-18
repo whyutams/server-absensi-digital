@@ -12,6 +12,6 @@
 - composer install
 - copy file .env.example & rename to .env
 - php artisan key:generate
-- php artisan migrate:refresh
+- php artisan migrate
 - php artisan storage:link
 - php artisan serve 
