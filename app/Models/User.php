@@ -18,8 +18,13 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
+        'nomor_induk',
+        'nama',
+        'nomor_hp',
         'email',
+        'foto_profil',
+        'role',
+        'username',
         'password',
     ];
 
@@ -45,4 +50,10 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    const ROLE_ADMIN = 'admin';
+    const ROLE_GURU_PIKET = 'guru_piket';
+    const ROLE_GURU = 'guru';
+    const ROLE_KESISWAAN = 'kesiswaan';
+    const ROLE_KEPSEK = 'kepsek';
 }
