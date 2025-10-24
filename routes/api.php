@@ -28,5 +28,5 @@ Route::get('/routes', function () {
     ]);
 });
 
-Route::apiResource('/keterlambatan', KeterlambatanController::class)->names('keterlambatan');
-Route::apiResource('/perizinan', PerizinanController::class)->names('perizinan');
+Route::apiResource('/keterlambatan', KeterlambatanController::class)->only(['store', 'update', 'destroy'])->names('keterlambatan');
+Route::apiResource('/perizinan', PerizinanController::class)->only(['store', 'update', 'destroy'])->names('perizinan');
