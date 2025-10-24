@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Perizinan;
+use Auth;
 use Illuminate\Http\Request;
 
 class PerizinanController extends Controller
@@ -47,12 +48,12 @@ class PerizinanController extends Controller
             $validated['gambar'] = 'storage/uploads/perizinan/' . $filename;
         }
 
-        if (Auth:check()){
+        if (Auth::check()){
             $validated['created_by'] = Auth::id();
         }
 
         Perizinan::create($validated);
-
+        
         return response()->json([
             'status' => 'success',
             'message' => 'Data berhasil ditambahkan.',
@@ -62,7 +63,7 @@ class PerizinanController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Perizinan $perizinan)
     {
         //
     }
@@ -70,7 +71,7 @@ class PerizinanController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Perizinan $perizinan)
     {
         //
     }
@@ -78,7 +79,7 @@ class PerizinanController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Perizinan $perizinan)
     {
         $validated = $request->validate([
             "nis" => "string",
@@ -113,9 +114,14 @@ class PerizinanController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Perizinan $perizinan)
     {
+        if ($perizinan->gambar && file_exists(public_path($perizinan->gambar))) {
+            unlink(public_path($perizinan->gambar));
+        }
+
         $perizinan->delete();
+
         return response()->json([
             'status' => 'success',
             'message' => 'Data berhasil dihapus.',

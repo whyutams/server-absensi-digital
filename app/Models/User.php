@@ -51,7 +51,7 @@ class User extends Authenticatable
         ];
     }
 
-    const ROLE_ADMIN = 'admin';
+    const ROLE_SUPERADMIN = 'superadmin';
     const ROLE_GURU_PIKET = 'guru_piket';
     const ROLE_GURU = 'guru';
     const ROLE_KESISWAAN = 'kesiswaan';
