@@ -44,8 +44,8 @@ class KeterlambatanController extends Controller
         if($request->hasFile('gambar')){
             $file = $request->file('gambar');
             $filename = time().'_'.$file->getClientOriginalName();
-            $file->move(public_path('uploads/keterlambatan/'), $filename);
-            $validated['gambar'] = 'uploads/keterlambatan/'.$filename;
+            $file->move(public_path('storage/uploads/keterlambatan/'), $filename);
+            $validated['gambar'] = 'storage/uploads/keterlambatan/'.$filename;
         }
 
         Keterlambatan::create($validated);
