@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\KeterlambatanController;
+use App\Http\Controllers\PerizinanController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -26,4 +28,5 @@ Route::get('/routes', function () {
     ]);
 });
 
-Route::resource('/users', UserController::class)->names('users');
+Route::apiResource('/keterlambatan', KeterlambatanController::class)->names('keterlambatan');
+Route::apiResource('/perizinan', PerizinanController::class)->names('perizinan');
