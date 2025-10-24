@@ -12,7 +12,12 @@ class PerizinanController extends Controller
      */
     public function index()
     {
-        //
+        $perizinan = Perizinan::all();
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $perizinan,
+        ]);
     }
 
     /**
@@ -28,25 +33,25 @@ class PerizinanController extends Controller
      */
     public function store(Request $request)
     {
-        $validated= $request->validate([
-          "nis" => "required|string|max:255",
-          "nomor_hp" => "required|string|max:15",
-          "nama" => "required|string|max:255",
-          "gambar" => "required|image|mimes:jpeg,png,jpg,gif,svg|max:2048",
+        $validated = $request->validate([
+            "nis" => "required|string",
+            "nomor_hp" => "required|string",
+            "nama" => "required|string",
+            "gambar" => "required|image|mimes:jpeg,png,jpg",
         ]);
 
-        if($request->hasFile('gambar')){
-          $file = $request->file('gambar');
-          $filename = time().'_'.$file->getClientOriginalName();
-          $file->move(public_path('storage/uploads/perizinan/'), $filename);
-          $validated['gambar'] = 'storage/uploads/perizinan/'.$filename;
+        if ($request->hasFile('gambar')) {
+            $file = $request->file('gambar');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('storage/uploads/perizinan/'), $filename);
+            $validated['gambar'] = 'storage/uploads/perizinan/' . $filename;
         }
 
         Perizinan::create($validated);
 
         return response()->json([
-          'status' => 'success',
-          'message' => 'Data Berhasil DiTambahkan.',
+            'status' => 'success',
+            'message' => 'Data berhasil ditambahkan.',
         ], 201);
     }
 

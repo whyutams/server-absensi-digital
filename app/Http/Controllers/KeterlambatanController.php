@@ -38,7 +38,7 @@ class KeterlambatanController extends Controller
             "nomor_hp"=>"required|string",
             "nama"=>"required|string",
             "keterangan"=>"required|string",
-            "gambar"=>"nullable|mimes:jpg,jpeg,png",
+            "gambar"=>"required|image|mimes:jpg,jpeg,png",
         ]);
 
         if($request->hasFile('gambar')){
