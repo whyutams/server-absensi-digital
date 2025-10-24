@@ -47,6 +47,10 @@ class PerizinanController extends Controller
             $validated['gambar'] = 'storage/uploads/perizinan/' . $filename;
         }
 
+        if (Auth:check()){
+            $validated['created_by'] = Auth::id();
+        }
+
         Perizinan::create($validated);
 
         return response()->json([
@@ -76,7 +80,34 @@ class PerizinanController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $validated = $request->validate([
+            "nis" => "string",
+            "nomor_hp" => "string",
+            "nama" => "string",
+            "gambar" => "image|mimes:jpeg,png,jpg",
+        ]);
+        if(request->hasFile('gambar')){
+            $file = $request->file('gambar');
+            $filename = time().'_'.$file->getClientOriginalName();
+            $file->move(public_path('storage/uploads/perizinan/'), $filename);
+            $validated['gambar'] = 'storage/uploads/perizinan/'.$filename;
+
+            if ($perizinan->gambar && file_exists(public_path($perizinan->gambar))) {
+                unlink(public_path($perizinan->gambar));
+            }
+        }
+            $perizinan->update([
+                "nis" => $validated['nis'] ?? $perizinan->nis,
+                "nomor_hp" => $validated['nomor_hp'] ?? $perizinan->nomor_hp,
+                "nama" => $validated['nama'] ?? $perizinan->nama,
+                "gambar" => $validated['gambar'] ?? $perizinan->gambar,
+            ]);
+            
+        
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Data berhasil diperbarui.',
+        ]);
     }
 
     /**
@@ -84,6 +115,10 @@ class PerizinanController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $perizinan->delete();
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Data berhasil dihapus.',
+        ]);
     }
 }
