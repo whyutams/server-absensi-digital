@@ -124,11 +124,11 @@ class KeterlambatanController extends Controller
      */
     public function destroy(Keterlambatan $keterlambatan)
     {
+        $keterlambatan->delete();
+        
         if ($keterlambatan->gambar && file_exists(public_path($keterlambatan->gambar))) {
             unlink(public_path($keterlambatan->gambar));
         }
-
-        $keterlambatan->delete();
 
         return response()->json([
             'status' => 'success',
