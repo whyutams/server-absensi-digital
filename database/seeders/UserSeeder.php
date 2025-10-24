@@ -18,8 +18,14 @@ class UserSeeder extends Seeder
             [
                 'nama' => 'Admin',
                 'role' => User::ROLE_ADMIN,
-                'username' => 'adminsmea123',
-                'password' => bcrypt('password'),
+                'username' => 'adminsmea25',
+                'password' => bcrypt('password123'),
+            ],
+            [
+                'nama' => 'Piket',
+                'role' => User::ROLE_GURU_PIKET,
+                'username' => 'piketsmea25',
+                'password' => bcrypt('password123'),
             ],
         ]);
 
