@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Perizinan;
 use Illuminate\Http\Request;
 
 class PerizinanController extends Controller
@@ -27,7 +28,26 @@ class PerizinanController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated= $request->validate([
+          "nis" => "required|string|max:255",
+          "nomor_hp" => "required|string|max:15",
+          "nama" => "required|string|max:255",
+          "gambar" => "required|image|mimes:jpeg,png,jpg,gif,svg|max:2048",
+        ]);
+
+        if($request->hasFile('gambar')){
+          $file = $request->file('gambar');
+          $filename = time().'_'.$file->getClientOriginalName();
+          $file->move(public_path('storage/uploads/perizinan/'), $filename);
+          $validated['gambar'] = 'storage/uploads/perizinan/'.$filename;
+        }
+
+        Perizinan::create($validated);
+
+        return response()->json([
+          'status' => 'success',
+          'message' => 'Data Berhasil DiTambahkan.',
+        ], 201);
     }
 
     /**
