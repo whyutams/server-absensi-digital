@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('nama')->nullable();
             $table->text('keterangan')->nullable();
             $table->string('gambar')->nullable();
-            $table->integer('created_by')->unsigned()->foreign()->references('id')->on('users')->onDelete('cascade');
+            $table->integer('created_by')->unsigned()->foreign()->references('id')->on('users')->onDelete('set null')->nullable();
             $table->timestamps();
         });
     }

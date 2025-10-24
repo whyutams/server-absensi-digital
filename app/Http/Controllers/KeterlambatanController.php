@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Keterlambatan;
 use Illuminate\Http\Request;
 
 class KeterlambatanController extends Controller
@@ -11,7 +12,12 @@ class KeterlambatanController extends Controller
      */
     public function index()
     {
-        //
+        $keterlambatans = Keterlambatan::all();
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $keterlambatans,
+        ]);
     }
 
     /**
@@ -27,7 +33,27 @@ class KeterlambatanController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([ 
+            "nis"=>"required|string",
+            "nomor_hp"=>"required|string",
+            "nama"=>"required|string",
+            "keterangan"=>"required|string",
+            "gambar"=>"nullable|mimes:jpg,jpeg,png",
+        ]);
+
+        if($request->hasFile('gambar')){
+            $file = $request->file('gambar');
+            $filename = time().'_'.$file->getClientOriginalName();
+            $file->move(public_path('uploads/keterlambatan/'), $filename);
+            $validated['gambar'] = 'uploads/keterlambatan/'.$filename;
+        }
+
+        Keterlambatan::create($validated);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Data berhasil ditambahkan.',
+        ], 201);
     }
 
     /**
