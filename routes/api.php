@@ -31,3 +31,4 @@ Route::get('/routes', function () {
 Route::apiResource('/users', UserController::class)->only(['index', 'store', 'update', 'destroy'])->names('users');
 Route::apiResource('/keterlambatan', KeterlambatanController::class)->only(['index', 'store', 'update', 'destroy'])->names('keterlambatan');
 Route::apiResource('/perizinan', PerizinanController::class)->only(['index', 'store', 'update', 'destroy'])->names('perizinan');
+Route::put('/perizinan/status', [PerizinanController::class, 'status'])->name('perizinan.status');
