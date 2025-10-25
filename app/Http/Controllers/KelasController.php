@@ -134,6 +134,7 @@ class KelasController extends Controller
         foreach ($kelas as $kelas) {
             for ($i = 1; $i <= (int) $kelas->jumlah_kelas; $i++) {
                 $result[] = [
+                    'id' => $kelas->id,
                     'kelas' => $kelas->kelas,
                     'jumlah_kelas' => $kelas->jumlah_kelas,
                     'jurusan' => $kelas->jurusan->nama ?? null,
