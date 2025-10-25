@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         Schema::create('kelas', function (Blueprint $table) {
             $table->id();
-            $table->string('kelas');
+            $table->string('kelas')->unique();
             $table->string('jumlah_kelas');
             $table->integer('jurusan_id')->unsigned()->foreign()->references('id')->on('jurusans')->onDelete('set null')->nullable();
             $table->timestamps();
