@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Jurusan;
 use App\Models\Kelas;
 use Illuminate\Http\Request;
 
@@ -69,7 +70,7 @@ class KelasController extends Controller
     public function update(Request $request, Kelas $kelas)
     {
         $request->validate([
-            'kelas' => 'nullable|numeric|unique:kelas,kelas,'.$kelas->id,
+            'kelas' => 'nullable|numeric',
             'jumlah_kelas' => 'nullable|numeric',
             'jurusan_id' => 'nullable|exists:jurusans,id',
         ]);
@@ -99,7 +100,32 @@ class KelasController extends Controller
         ]);
     }
 
-    public function list()
+    public function generate_list_aturan_kelas()
+    {
+        $jurusans = Jurusan::all();
+
+        $result = [];
+
+        foreach ($jurusans as $jurusan) {
+            for ($i = 0; $i < 3; $i++) {
+                $result[] = [
+                    'kelas' => 10 + ($i),
+                    'jumlah_kelas' => 3,
+                    'jurusan_id' => $jurusan->id
+                ];
+            }
+        }
+
+        Kelas::truncate();
+        Kelas::insert($result);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Data berhasil di-generate.'
+        ]);
+    }
+
+    public function list_aturan_kelas()
     {
         $kelas = Kelas::with('jurusan')->get();
 
@@ -111,7 +137,7 @@ class KelasController extends Controller
                     'kelas' => $kelas->kelas,
                     'jumlah_kelas' => $kelas->jumlah_kelas,
                     'jurusan' => $kelas->jurusan->nama ?? null,
-                    'nama_kelas' => strtoupper($kelas->kelas) . ' ' . strtoupper($kelas->jurusan->nama ?? '') . ' ' . $i
+                    'nama_kelas' => strtoupper($kelas->kelas) . ' ' . strtoupper($kelas->jurusan->alias ?? $kelas->jurusan->nama) . ' ' . $i
                 ];
             }
         }

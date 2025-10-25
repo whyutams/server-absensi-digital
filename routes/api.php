@@ -35,6 +35,8 @@ Route::apiResource('/jurusan', JurusanController::class)->only(['index', 'store'
 Route::apiResource('/users', UserController::class)->only(['index', 'store', 'update', 'destroy'])->names('users');
 Route::apiResource('/siswa', SiswaController::class)->only(['index', 'store', 'update', 'destroy'])->names('siswa');
 Route::apiResource('/kelas', KelasController::class)->only(['index', 'store', 'update', 'destroy'])->names('kelas');
+Route::get('/kelas/list', [KelasController::class, 'list_aturan_kelas'])->name('kelas.list');
+Route::post('/kelas/list/generate', [KelasController::class, 'generate_list_aturan_kelas'])->name('kelas.list.generate');
 Route::apiResource('/keterlambatan', KeterlambatanController::class)->only(['index', 'store', 'destroy'])->names('keterlambatan');
 Route::apiResource('/perizinan', PerizinanController::class)->only(['index', 'store', 'destroy'])->names('perizinan');
 Route::put('/perizinan/status', [PerizinanController::class, 'status'])->name('perizinan.status');
