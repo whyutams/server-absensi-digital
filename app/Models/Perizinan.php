@@ -7,17 +7,21 @@ use Illuminate\Database\Eloquent\Model;
 class Perizinan extends Model
 {
     protected $fillable = [
-        'nis',
-        'nomor_hp',
-        'nama',
+        'keterangan',
         'gambar',
         'status',
+        'siswa_id',
         'created_by',
     ];
 
-    function created_by()
+    public function created_by()
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function siswa()
+    {
+        return $this->belongsTo(Siswa::class, 'siswa_id');
     }
 
     const STATUS_PENDING = 'pending';

@@ -13,11 +13,10 @@ return new class extends Migration {
     {
         Schema::create('perizinans', function (Blueprint $table) {
             $table->id();
-            $table->string('nis')->nullable();
-            $table->string('nomor_hp')->nullable();
-            $table->string('nama')->nullable();
+            $table->text('keterangan')->nullable();
             $table->string('gambar')->nullable();
             $table->enum('status', [Perizinan::STATUS_APPROVED, Perizinan::STATUS_PENDING, Perizinan::STATUS_REJECTED])->default(Perizinan::STATUS_PENDING);
+            $table->integer('siswa_id')->unsigned()->foreign()->references('id')->on('siswas')->onDelete('cascade');
             $table->integer('created_by')->unsigned()->foreign()->references('id')->on('users')->onDelete('cascade')->nullable();
             $table->timestamps();
         });

@@ -18,8 +18,9 @@ return new class extends Migration
             $table->string('nama');
             $table->string('nomor_hp')->unique()->nullable();
             $table->string('email')->unique()->nullable();
+            $table->string('alamat')->nullable();
             $table->string('foto_profil')->nullable();
-            $table->enum('role', [User::ROLE_SUPERADMIN, User::ROLE_GURU_PIKET, User::ROLE_GURU, User::ROLE_KESISWAAN, User::ROLE_KEPSEK]);
+            $table->enum('role', [User::ROLE_SUPERADMIN, User::ROLE_GURU_PIKET, User::ROLE_GURU, User::ROLE_KESISWAAN, User::ROLE_KEPSEK, User::ROLE_ORANGTUA]);
             $table->string('username')->unique();
             $table->string('password');
             $table->rememberToken();

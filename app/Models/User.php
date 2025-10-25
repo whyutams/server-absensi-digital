@@ -18,10 +18,11 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'nomor_induk',
+        'nip',
         'nama',
         'nomor_hp',
         'email',
+        'alamat',
         'foto_profil',
         'role',
         'username',
@@ -56,4 +57,5 @@ class User extends Authenticatable
     const ROLE_GURU = 'guru';
     const ROLE_KESISWAAN = 'kesiswaan';
     const ROLE_KEPSEK = 'kepsek';
+    const ROLE_ORANGTUA = 'orangtua';
 }
