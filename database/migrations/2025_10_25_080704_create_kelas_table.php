@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->string('kelas')->unique();
             $table->string('jumlah_kelas');
-            $table->integer('jurusan_id')->unsigned()->foreign()->references('id')->on('jurusans')->onDelete('set null')->nullable();
+            $table->integer('jurusan_id')->unsigned()->foreign()->references('id')->on('jurusans')->onDelete('cascade');
             $table->timestamps();
         });
     }
