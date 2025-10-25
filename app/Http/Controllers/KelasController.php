@@ -131,13 +131,13 @@ class KelasController extends Controller
 
         $result = [];
 
-        foreach ($kelas as $kelas) {
-            for ($i = 1; $i <= (int) $kelas->jumlah_kelas; $i++) {
+        foreach ($kelas as $k) {
+            for ($i = 1; $i <= (int) $k->jumlah_kelas; $i++) {
                 $result[] = [
-                    'kelas' => $kelas->kelas,
-                    'jumlah_kelas' => $kelas->jumlah_kelas,
-                    'jurusan' => $kelas->jurusan->nama ?? null,
-                    'nama_kelas' => strtoupper($kelas->kelas) . ' ' . strtoupper($kelas->jurusan->alias ?? $kelas->jurusan->nama) . ' ' . $i
+                    'kelas' => $k->kelas,
+                    'jumlah_kelas' => $k->jumlah_kelas,
+                    'jurusan' => $k->jurusan->nama ?? null,
+                    'nama_kelas' => strtoupper($k->kelas) . ' ' . strtoupper($k->jurusan->alias ?? $k->jurusan->nama) . ' ' . $i
                 ];
             }
         }
