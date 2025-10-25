@@ -69,7 +69,7 @@ class KelasController extends Controller
     public function update(Request $request, Kelas $kelas)
     {
         $request->validate([
-            'kelas' => 'nullable|numeric|unique:kelas,kelas',
+            'kelas' => 'nullable|numeric|unique:kelas,kelas,'.$kelas->id,
             'jumlah_kelas' => 'nullable|numeric',
             'jurusan_id' => 'nullable|exists:jurusans,id',
         ]);

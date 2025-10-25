@@ -36,7 +36,7 @@ class JurusanController extends Controller
         $validated = $request->validate([
             'nama' => 'required|string|unique:jurusans,nama',
             'alias' => 'required|string|unique:jurusans,alias',
-            'deskripsi' => 'required|string',
+            'deskripsi' => 'nullable|string',
         ]);
 
         Jurusan::create($validated);
@@ -69,8 +69,8 @@ class JurusanController extends Controller
     public function update(Request $request, Jurusan $jurusan)
     {
         $request->validate([
-            'nama' => 'nullable|string|unique:jurusans,nama',
-            'alias' => 'nullable|string|unique:jurusans,alias',
+            'nama' => 'nullable|string|unique:jurusans,nama,'.$jurusan->id,
+            'alias' => 'nullable|string|unique:jurusans,alias,'.$jurusan->id,
             'deskripsi' => 'nullable|string',
         ]);
 

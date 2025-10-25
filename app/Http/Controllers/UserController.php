@@ -48,7 +48,7 @@ class UserController extends Controller
 
         // mengubah username dan email menjadi huruf kecil semua
         $validated['username'] = strtolower($validated['username']);
-        if(isset($validated['email'])) {
+        if (isset($validated['email'])) {
             $validated['email'] = strtolower($validated['email']);
         }
 
@@ -90,14 +90,14 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         $validated = $request->validate([
-            "nip" => "nullable|string|unique:users,nip",
+            "nip" => "nullable|string|unique:users,nip," . $user->id,
             "nama" => "nullable|string",
-            "nomor_hp" => "nullable|unique:users,nomor_hp",
-            "email" => "nullable|email|unique:users,email",
+            "nomor_hp" => "nullable|unique:users,nomor_hp," . $user->id,
+            "email" => "nullable|email|unique:users,email," . $user->id,
             "alamat" => "nullable|string",
             "foto_profil" => "nullable|image|mimes:jpg,jpeg,png",
             "role" => "nullable|in:" . User::ROLE_SUPERADMIN . "," . User::ROLE_GURU_PIKET . "," . User::ROLE_GURU . "," . User::ROLE_KESISWAAN . "," . User::ROLE_KEPSEK,
-            "username" => "nullable|string|unique:users,username",
+            "username" => "nullable|string|unique:users,username," . $user->username,
             "password" => "nullable|string|min:6",
         ]);
 
