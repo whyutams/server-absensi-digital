@@ -1,0 +1,124 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Kelas;
+use Illuminate\Http\Request;
+
+class KelasController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        $kelas = Kelas::all();
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $kelas,
+        ]);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'kelas' => 'required|numeric',
+            'jumlah_kelas' => 'required|numeric',
+            'jurusan_id' => 'required|exists:jurusans,id',
+        ]);
+
+        Kelas::create($validated);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Data berhasil ditambahkan.'
+        ]);
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(Kelas $kelas)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Kelas $kelas)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, Kelas $kelas)
+    {
+        $request->validate([
+            'kelas' => 'nullable|numeric|unique:kelas,kelas',
+            'jumlah_kelas' => 'nullable|numeric',
+            'jurusan_id' => 'nullable|exists:jurusans,id',
+        ]);
+
+        $kelas->update([
+            'kelas' => $request['kelas'] ?? $kelas->kelas,
+            'jumlah_kelas' => $request['jumlah_kelas'] ?? $kelas->jumlah_kelas,
+            'jurusan_id' => $request['jurusan_id'] ?? $kelas->jurusan_id
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Data berhasil diperbarui.'
+        ]);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Kelas $kelas)
+    {
+        $kelas->delete();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Data berhasil dihapus.'
+        ]);
+    }
+
+    public function list()
+    {
+        $kelas = Kelas::with('jurusan')->get();
+
+        $result = [];
+
+        foreach ($kelas as $kelas) {
+            for ($i = 1; $i <= (int) $kelas->jumlah_kelas; $i++) {
+                $result[] = [
+                    'kelas' => $kelas->kelas,
+                    'jumlah_kelas' => $kelas->jumlah_kelas,
+                    'jurusan' => $kelas->jurusan->nama ?? null,
+                    'nama_kelas' => strtoupper($kelas->kelas) . ' ' . strtoupper($kelas->jurusan->nama ?? '') . ' ' . $i
+                ];
+            }
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $result
+        ]);
+    }
+}

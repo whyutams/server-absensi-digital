@@ -39,11 +39,18 @@ class UserController extends Controller
             "nama" => "required|string",
             "nomor_hp" => "required|unique:users,nomor_hp",
             "email" => "nullable|email|unique:users,email",
+            "alamat" => "nullable|string",
             "foto_profil" => "nullable|image|mimes:jpg,jpeg,png",
             "role" => "required|in:" . User::ROLE_SUPERADMIN . "," . User::ROLE_GURU_PIKET . "," . User::ROLE_GURU . "," . User::ROLE_KESISWAAN . "," . User::ROLE_KEPSEK,
             "username" => "required|string|unique:users,username",
             "password" => "required|string|min:6",
         ]);
+
+        // mengubah username dan email menjadi huruf kecil semua
+        $validated['username'] = strtolower($validated['username']);
+        if(isset($validated['email'])) {
+            $validated['email'] = strtolower($validated['email']);
+        }
 
         // Handle file upload
         if ($request->hasFile('foto_profil')) {
@@ -87,6 +94,7 @@ class UserController extends Controller
             "nama" => "nullable|string",
             "nomor_hp" => "nullable|unique:users,nomor_hp",
             "email" => "nullable|email|unique:users,email",
+            "alamat" => "nullable|string",
             "foto_profil" => "nullable|image|mimes:jpg,jpeg,png",
             "role" => "nullable|in:" . User::ROLE_SUPERADMIN . "," . User::ROLE_GURU_PIKET . "," . User::ROLE_GURU . "," . User::ROLE_KESISWAAN . "," . User::ROLE_KEPSEK,
             "username" => "nullable|string|unique:users,username",
@@ -108,14 +116,14 @@ class UserController extends Controller
 
         // Update data (jika field tidak diisi, gunakan nilai lama)
         $user->update([
-            "nip" => $validated['nip'] ?? $user->nip,
-            "nomor_hp" => $validated['nomor_hp'] ?? $user->nomor_hp,
-            "nama" => $validated['nama'] ?? $user->nama,
-            "keterangan" => $validated['keterangan'] ?? $user->keterangan,
-            "foto_profil" => $validated['foto_profil'] ?? $user->foto_profil,
-            "username" => $validated['username'] ?? $user->username,
-            "email" => $validated['email'] ?? $user->email,
-            "role" => $validated['role'] ?? $user->role,
+            "nip" => $request['nip'] ?? $user->nip,
+            "nomor_hp" => $request['nomor_hp'] ?? $user->nomor_hp,
+            "nama" => $request['nama'] ?? $user->nama,
+            "alamat" => $request['alamat'] ?? $user->alamat,
+            "foto_profil" => $request['foto_profil'] ?? $user->foto_profil,
+            "username" => $request['username'] ? strtolower($validated['username']) : $user->username,
+            "email" => $request['email'] ? strtolower($validated['email']) : $user->email,
+            "role" => $request['role'] ?? $user->role,
             "password" => isset($validated['password']) ? bcrypt($validated['password']) : $user->password,
         ]);
 

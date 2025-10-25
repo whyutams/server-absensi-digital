@@ -35,9 +35,8 @@ class PerizinanController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            "nis" => "required|string",
-            "nomor_hp" => "required|string",
-            "nama" => "required|string",
+            "siswa_id" => "required|exists:siswas,id",
+            "keterangan" => "required|string",
             "gambar" => "required|image|mimes:jpeg,png,jpg",
         ]);
 
@@ -82,38 +81,7 @@ class PerizinanController extends Controller
      */
     public function update(Request $request, Perizinan $perizinan)
     {
-        $validated = $request->validate([
-            "nis" => "string",
-            "nomor_hp" => "string",
-            "nama" => "string",
-            "gambar" => "image|mimes:jpeg,png,jpg",
-        ]);
-
-        // Handle file upload
-        if ($request->hasFile('gambar')) {
-            $file = $request->file('gambar');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('storage/uploads/perizinan/'), $filename);
-            $validated['gambar'] = 'storage/uploads/perizinan/' . $filename;
-
-            // cek dan hapus gambar lama jika ada
-            if ($perizinan->gambar && file_exists(public_path($perizinan->gambar))) {
-                unlink(public_path($perizinan->gambar));
-            }
-        }
-
-        // Update data (jika field tidak diisi, gunakan nilai lama)
-        $perizinan->update([
-            "nis" => $validated['nis'] ?? $perizinan->nis,
-            "nomor_hp" => $validated['nomor_hp'] ?? $perizinan->nomor_hp,
-            "nama" => $validated['nama'] ?? $perizinan->nama,
-            "gambar" => $validated['gambar'] ?? $perizinan->gambar,
-        ]);
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Data berhasil diperbarui.',
-        ]);
+        //
     }
 
     /**
@@ -130,6 +98,22 @@ class PerizinanController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'Data berhasil dihapus.',
+        ]);
+    }
+
+    public function status(Request $request, Perizinan $perizinan)
+    {
+        $validated = $request->validate([
+            "status" => "required|in:" . Perizinan::STATUS_REJECTED . "," . Perizinan::STATUS_APPROVED,
+        ]);
+
+        $perizinan->update([
+            "status" => $validated['status'],
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Data berhasil diperbarui.',
         ]);
     }
 }
