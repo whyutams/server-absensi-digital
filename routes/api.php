@@ -1,11 +1,13 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\JurusanController;
 use App\Http\Controllers\KelasController;
 use App\Http\Controllers\KeterlambatanController;
 use App\Http\Controllers\PerizinanController;
 use App\Http\Controllers\SiswaController;
 use App\Http\Controllers\UserController;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/status', function () {
@@ -31,12 +33,46 @@ Route::get('/routes', function () {
     ]);
 });
 
-Route::apiResource('/jurusan', JurusanController::class)->only(['index', 'store', 'update', 'destroy'])->names('jurusan');
-Route::apiResource('/users', UserController::class)->only(['index', 'store', 'update', 'destroy'])->names('users');
-Route::apiResource('/siswa', SiswaController::class)->only(['index', 'store', 'update', 'destroy'])->names('siswa');
-Route::apiResource('/kelas', KelasController::class)->only(['index', 'store', 'update', 'destroy'])->parameters(['kelas'=> 'kelas'])->names('kelas');
-Route::get('/kelas/list', [KelasController::class, 'list_aturan_kelas'])->name('kelas.list');
-Route::post('/kelas/list/generate', [KelasController::class, 'generate_list_aturan_kelas'])->name('kelas.list.generate');
-Route::apiResource('/keterlambatan', KeterlambatanController::class)->only(['index', 'store', 'destroy'])->names('keterlambatan');
-Route::apiResource('/perizinan', PerizinanController::class)->only(['index', 'store', 'destroy'])->names('perizinan');
-Route::put('/perizinan/status', [PerizinanController::class, 'status'])->name('perizinan.status');
+Route::post('/login', [AuthController::class, 'login']);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout']);
+
+    Route::middleware(['role:' . User::ROLE_SUPERADMIN . ',' . User::ROLE_KEPSEK])->group(function () {
+        Route::apiResource('/jurusan', JurusanController::class)->only(['index', 'store', 'update', 'destroy'])->names('jurusan');
+        Route::apiResource('/users', UserController::class)->only(['index', 'store', 'update', 'destroy'])->names('users');
+        Route::apiResource('/kelas', KelasController::class)->only(['index', 'store', 'update', 'destroy'])->parameters(['kelas' => 'kelas'])->names('kelas');
+        Route::get('/kelas/list', [KelasController::class, 'list_aturan_kelas'])->name('kelas.list');
+        Route::post('/kelas/list/generate', [KelasController::class, 'generate_list_aturan_kelas'])->name('kelas.list.generate');
+        Route::apiResource('/siswa', SiswaController::class)->only(['index', 'store', 'update', 'destroy'])->names('siswa');
+        Route::apiResource('/keterlambatan', KeterlambatanController::class)->only(['index'])->names('keterlambatan');
+        Route::apiResource('/perizinan', PerizinanController::class)->only(['index'])->names('perizinan');
+    });
+
+    Route::middleware(['role:' . User::ROLE_GURU])->group(function () {
+        Route::apiResource('/siswa', SiswaController::class)->only(['index', 'store', 'update', 'destroy'])->names('siswa');
+        Route::apiResource('/keterlambatan', KeterlambatanController::class)->only(['index'])->names('keterlambatan');
+        Route::apiResource('/perizinan', PerizinanController::class)->only(['index'])->names('perizinan');
+    });
+
+    Route::middleware(['role:' . User::ROLE_GURU_PIKET . ',' . User::ROLE_KESISWAAN])->group(function () {
+        Route::apiResource('/siswa', SiswaController::class)->only(['index', 'store', 'update', 'destroy'])->names('siswa');
+        Route::apiResource('/keterlambatan', KeterlambatanController::class)->only(['index', 'store', 'destroy'])->names('keterlambatan');
+        Route::apiResource('/perizinan', PerizinanController::class)->only(['index', 'store', 'destroy'])->names('perizinan');
+        Route::put('/perizinan/status', [PerizinanController::class, 'status'])->name('perizinan.status');
+    });
+
+    Route::middleware(['role:' . User::ROLE_ORANGTUA])->group(function () {
+        Route::apiResource('/keterlambatan', KeterlambatanController::class)->only(['index'])->names('keterlambatan');
+        Route::apiResource('/perizinan', PerizinanController::class)->only(['index'])->names('perizinan');
+    });
+
+    // Route::apiResource('/jurusan', JurusanController::class)->only(['index', 'store', 'update', 'destroy'])->names('jurusan');
+    // Route::apiResource('/users', UserController::class)->only(['index', 'store', 'update', 'destroy'])->names('users');
+    // Route::apiResource('/siswa', SiswaController::class)->only(['index', 'store', 'update', 'destroy'])->names('siswa');
+    // Route::apiResource('/kelas', KelasController::class)->only(['index', 'store', 'update', 'destroy'])->parameters(['kelas' => 'kelas'])->names('kelas');
+    // Route::get('/kelas/list', [KelasController::class, 'list_aturan_kelas'])->name('kelas.list');
+    // Route::post('/kelas/list/generate', [KelasController::class, 'generate_list_aturan_kelas'])->name('kelas.list.generate');
+    // Route::apiResource('/keterlambatan', KeterlambatanController::class)->only(['index', 'store', 'destroy'])->names('keterlambatan');
+    // Route::apiResource('/perizinan', PerizinanController::class)->only(['index', 'store', 'destroy'])->names('perizinan');
+    // Route::put('/perizinan/status', [PerizinanController::class, 'status'])->name('perizinan.status');
+});
