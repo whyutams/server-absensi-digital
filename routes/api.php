@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\GeneralController;
 use App\Http\Controllers\JurusanController;
 use App\Http\Controllers\KelasController;
 use App\Http\Controllers\KeterlambatanController;
@@ -36,6 +37,7 @@ Route::get('/routes', function () {
 Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/info', [GeneralController::class, 'info']);
 
     Route::middleware(['role:' . User::ROLE_SUPERADMIN . ',' . User::ROLE_KEPSEK])->group(function () {
         Route::apiResource('/jurusan', JurusanController::class)->only(['index', 'store', 'update', 'destroy'])->names('jurusan');
