@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('nis')->unique()->nullable();
             $table->string('nama')->nullable();
             $table->string('nomor_hp')->nullable();
+            $table->string('kelas')->nullable();
             $table->integer('jurusan_id')->unsigned()->foreign()->references('id')->on('jurusans')->onDelete('set null')->nullable();
-            $table->integer('kelas_id')->unsigned()->foreign()->references('id')->on('kelas')->onDelete('set null')->nullable();
             $table->integer('orangtua_id')->unsigned()->foreign()->references('id')->on('users')->onDelete('set null')->nullable();
             $table->timestamps();
         });

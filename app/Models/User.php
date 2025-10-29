@@ -27,6 +27,7 @@ class User extends Authenticatable
         'alamat',
         'foto_profil',
         'role',
+        'jurusan_id',
         'username',
         'password',
     ];
@@ -52,6 +53,11 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function jurusan()
+    {
+        return $this->belongsTo(Jurusan::class, 'jurusan_id');
     }
 
     const ROLE_SUPERADMIN = 'superadmin';
