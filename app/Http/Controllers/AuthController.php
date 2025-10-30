@@ -18,7 +18,7 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
 
-        $user = User::where('username', $request->username)->first();
+        $user = User::with('jurusan')->where('username', $request->username)->first();
 
         if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json([
@@ -42,6 +42,7 @@ class AuthController extends Controller
                 'alamat' => $user->alamat,
                 'role' => $user->role,
                 'foto_profil' => $user->foto_profil ? url('storage/' . $user->foto_profil) : null,
+                'jurusan' => $user->jurusan,
             ],
             'timestamp' => now(),
             'token' => $token
