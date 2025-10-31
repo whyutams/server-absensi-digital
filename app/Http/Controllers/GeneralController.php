@@ -28,7 +28,7 @@ class GeneralController extends Controller
             $keterlambatan = [];
             $perizinan = [];
 
-            if (Auth::user()->role == User::ROLE_GURU_PIKET && Auth::user()->role == User::ROLE_KESISWAAN) {
+            if (Auth::user()->role == User::ROLE_GURU_PIKET || Auth::user()->role == User::ROLE_KESISWAAN) {
                 $keterlambatan = Keterlambatan::with(['created_by', 'siswa.jurusan', 'siswa.orangtua'])->get();
                 $perizinan = Perizinan::with(['created_by', 'siswa.jurusan', 'siswa.orangtua'])->get();
             } else {
@@ -81,24 +81,16 @@ class GeneralController extends Controller
                 ],
             ];
         } else {
-            $keterlambatan = [];
-            $perizinan = [];
-
-            if (Auth::user()->role == User::ROLE_GURU_PIKET && Auth::user()->role == User::ROLE_KESISWAAN) {
-                $keterlambatan = Keterlambatan::with(['created_by', 'siswa.jurusan', 'siswa.orangtua'])->get();
-                $perizinan = Perizinan::with(['created_by', 'siswa.jurusan', 'siswa.orangtua'])->get();
-            } else {
-                $keterlambatan = Keterlambatan::with(['created_by', 'siswa.jurusan', 'siswa.orangtua'])
-                    ->whereHas('siswa', function ($query) {
-                        $query->where('orangtua_id', Auth::user()->id);
-                    })
-                    ->get();
-                $perizinan = Perizinan::with(['created_by', 'siswa.jurusan', 'siswa.orangtua'])
-                    ->whereHas('siswa', function ($query) {
-                        $query->where('orangtua_id', Auth::user()->id);
-                    })
-                    ->get();
-            }
+            $keterlambatan = Keterlambatan::with(['created_by', 'siswa.jurusan', 'siswa.orangtua'])
+                ->whereHas('siswa', function ($query) {
+                    $query->where('orangtua_id', Auth::user()->id);
+                })
+                ->get();
+            $perizinan = Perizinan::with(['created_by', 'siswa.jurusan', 'siswa.orangtua'])
+                ->whereHas('siswa', function ($query) {
+                    $query->where('orangtua_id', Auth::user()->id);
+                })
+                ->get();
 
             $data = [
                 'data' => [
