@@ -120,7 +120,7 @@ class UserController extends Controller
             "nomor_hp" => $request['nomor_hp'] ?? $user->nomor_hp,
             "nama" => $request['nama'] ?? $user->nama,
             "alamat" => $request['alamat'] ?? $user->alamat,
-            "foto_profil" => $request['foto_profil'] ?? $user->foto_profil,
+            "foto_profil" => $validated['foto_profil'] ?? $user->foto_profil,
             "username" => $request['username'] ? strtolower($validated['username']) : $user->username,
             "email" => $request['email'] ? strtolower($validated['email']) : $user->email,
             "role" => $request['role'] ?? $user->role,
