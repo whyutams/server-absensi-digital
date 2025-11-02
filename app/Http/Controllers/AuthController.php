@@ -65,7 +65,8 @@ class AuthController extends Controller
         ]);
     }
 
-    public function logged_user() {
+    public function logged_user()
+    {
         $user = Auth::user();
 
         return response()->json([
@@ -81,7 +82,42 @@ class AuthController extends Controller
                 'role' => $user->role,
                 'foto_profil' => $user->foto_profil,
                 'jurusan' => $user->jurusan,
-            ], 
+            ],
+        ], 200);
+    }
+
+    public function update_profile(Request $request)
+    {
+        $user = Auth::user();
+
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'nomor_hp' => 'nullable|string|max:20',
+            'email' => 'nullable|email|max:255|unique:users,email,' . $user->id,
+            'alamat' => 'nullable|string|max:500',
+            'foto_profil' => 'nullable|image|mimes:jpeg,png,jpg,gif',
+        ]);
+
+        $user->nama = $request->nama;
+        $user->nomor_hp = $request->nomor_hp;
+        $user->email = $request->email;
+        $user->alamat = $request->alamat;
+
+        if ($request->hasFile('foto_profil')) {
+            $file = $request->file('foto_profil');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('storage/uploads/foto_profil'), $filename);
+            $user->foto_profil = 'storage/uploads/foto_profil/' . $filename;
+        }
+
+        $user->save();
+
+        $user=User::with('jurusan')->find($user->id);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Profil berhasil diperbarui',
+            'user' => $user,
         ], 200);
     }
 }

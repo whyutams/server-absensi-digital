@@ -38,6 +38,7 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/whoami', [AuthController::class, 'logged_user']);
+    Route::put('/profile/edit', [AuthController::class, 'update_profile']);
     Route::get('/info', [GeneralController::class, 'info']);
 
     Route::middleware(['role:' . User::ROLE_SUPERADMIN . ',' . User::ROLE_KEPSEK])->group(function () {
