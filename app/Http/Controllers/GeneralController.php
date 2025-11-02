@@ -20,7 +20,7 @@ class GeneralController extends Controller
         $keterlambatan = Keterlambatan::with(['created_by', 'siswa.jurusan', 'siswa.orangtua'])->get();
         $perizinan = Perizinan::with(['created_by', 'siswa.jurusan', 'siswa.orangtua'])->get();
         $siswa = Siswa::with(['jurusan', 'orangtua'])->get();
-        $user = User::with(['jurusan'])->get();
+        $user = User::with(['jurusan'])->where('role', '!=', User::ROLE_SUPERADMIN)->where('role', '!=', User::ROLE_KEPSEK)->get();
 
         $data = [];
 
@@ -43,6 +43,8 @@ class GeneralController extends Controller
                         $query->where('jurusan_id', Auth::user()->jurusan_id);
                     })
                     ->get();
+
+                $siswa = Siswa::with(['jurusan', 'orangtua'])->where('jurusan_id', Auth::user()->jurusan_id)->get();
             }
 
             $data = [
@@ -70,6 +72,8 @@ class GeneralController extends Controller
                     'perizinan' => $perizinan,
                     'siswa' => $siswa,
                     'user' => $user,
+                    'user_guru' => $user->where('role', User::ROLE_GURU),
+                    'user_orangtua' => $user->where('role', User::ROLE_ORANGTUA),
                 ],
                 'counts' => [
                     'total_kelas' => count($kelas),
@@ -78,6 +82,8 @@ class GeneralController extends Controller
                     'total_perizinan' => count($perizinan),
                     'total_siswa' => count($siswa),
                     'total_user' => count($user),
+                    'total_user_guru' => count($user->where('role', User::ROLE_GURU)),
+                    'total_user_orangtua' => count($user->where('role', User::ROLE_ORANGTUA)),
                 ],
             ];
         } else {
