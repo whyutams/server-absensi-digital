@@ -15,12 +15,12 @@ class GeneralController extends Controller
 {
     public function info()
     {
-        $kelas = Kelas::with('jurusan')->get();
-        $jurusan = Jurusan::get();
-        $keterlambatan = Keterlambatan::with(['created_by', 'siswa.jurusan', 'siswa.orangtua'])->get();
-        $perizinan = Perizinan::with(['created_by', 'siswa.jurusan', 'siswa.orangtua'])->get();
-        $siswa = Siswa::with(['jurusan', 'orangtua'])->get();
-        $user = User::with(['jurusan'])->where('role', '!=', User::ROLE_SUPERADMIN)->where('role', '!=', User::ROLE_KEPSEK)->get();
+        $kelas = Kelas::with('jurusan')->latest()->get();
+        $jurusan = Jurusan::latest()->get();
+        $keterlambatan = Keterlambatan::with(['created_by', 'siswa.jurusan', 'siswa.orangtua'])->latest()->get();
+        $perizinan = Perizinan::with(['created_by', 'siswa.jurusan', 'siswa.orangtua'])->latest()->get();
+        $siswa = Siswa::with(['jurusan', 'orangtua'])->latest()->get();
+        $user = User::with(['jurusan'])->where('role', '!=', User::ROLE_SUPERADMIN)->where('role', '!=', User::ROLE_KEPSEK)->latest()->get();
 
         $data = [];
 
@@ -29,22 +29,24 @@ class GeneralController extends Controller
             $perizinan = [];
 
             if (Auth::user()->role == User::ROLE_GURU_PIKET || Auth::user()->role == User::ROLE_KESISWAAN) {
-                $keterlambatan = Keterlambatan::with(['created_by', 'siswa.jurusan', 'siswa.orangtua'])->get();
-                $perizinan = Perizinan::with(['created_by', 'siswa.jurusan', 'siswa.orangtua'])->get();
+                $keterlambatan = Keterlambatan::with(['created_by', 'siswa.jurusan', 'siswa.orangtua'])->latest()->get();
+                $perizinan = Perizinan::with(['created_by', 'siswa.jurusan', 'siswa.orangtua'])->latest()->get();
             } else {
                 $keterlambatan = Keterlambatan::with(['created_by', 'siswa.jurusan', 'siswa.orangtua'])
                     ->whereHas('siswa', function ($query) {
                         $query->where('jurusan_id', Auth::user()->jurusan_id);
                     })
+                    ->latest()
                     ->get();
 
                 $perizinan = Perizinan::with(['created_by', 'siswa.jurusan', 'siswa.orangtua'])
                     ->whereHas('siswa', function ($query) {
                         $query->where('jurusan_id', Auth::user()->jurusan_id);
                     })
+                    ->latest()
                     ->get();
 
-                $siswa = Siswa::with(['jurusan', 'orangtua'])->where('jurusan_id', Auth::user()->jurusan_id)->get();
+                $siswa = Siswa::with(['jurusan', 'orangtua'])->where('jurusan_id', Auth::user()->jurusan_id)->latest()->get();
             }
 
             $data = [
@@ -91,11 +93,13 @@ class GeneralController extends Controller
                 ->whereHas('siswa', function ($query) {
                     $query->where('orangtua_id', Auth::user()->id);
                 })
+                ->latest()
                 ->get();
             $perizinan = Perizinan::with(['created_by', 'siswa.jurusan', 'siswa.orangtua'])
                 ->whereHas('siswa', function ($query) {
                     $query->where('orangtua_id', Auth::user()->id);
                 })
+                ->latest()
                 ->get();
 
             $data = [
