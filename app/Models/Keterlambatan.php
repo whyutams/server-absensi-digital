@@ -11,6 +11,7 @@ class Keterlambatan extends Model
         'gambar',
         'siswa_id',
         'created_by',
+        "date"
     ];
 
 
