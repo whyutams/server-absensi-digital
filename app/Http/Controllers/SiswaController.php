@@ -55,9 +55,11 @@ class SiswaController extends Controller
      */
     public function show(Siswa $siswa)
     {
+        $data = Siswa::with(['jurusan', 'orangtua'])->where('id', $siswa->id)->first();
+
         return response()->json([
             'status' => 'success',
-            'data' => $siswa,
+            'data' => $data,
         ]);
     }
 

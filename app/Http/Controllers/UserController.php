@@ -73,9 +73,11 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
+        $data = User::with('jurusan')->where('id', $user->id)->first();
+
         return response()->json([
             'status' => 'success',
-            'data' => $user,
+            'data' => $data,
         ]);
     }
 

@@ -65,9 +65,11 @@ class PerizinanController extends Controller
      */
     public function show(Perizinan $perizinan)
     {
+        $data = Perizinan::with(['created_by', 'siswa.jurusan', 'siswa.orangtua'])->where('id', $perizinan->id)->first();
+
         return response()->json([
             'status' => 'success',
-            'data' => $perizinan,
+            'data' => $data,
         ]);
     }
 

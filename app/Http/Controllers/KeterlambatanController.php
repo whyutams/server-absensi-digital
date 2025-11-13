@@ -65,9 +65,11 @@ class KeterlambatanController extends Controller
      */
     public function show(Keterlambatan $keterlambatan)
     {
+        $data = Keterlambatan::with(['created_by', 'siswa.jurusan', 'siswa.orangtua'])->where('id', $keterlambatan->id)->first();
+
         return response()->json([
             'status' => 'success',
-            'data' => $keterlambatan,
+            'data' => $data,
         ]);
     }
 

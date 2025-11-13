@@ -53,9 +53,11 @@ class KelasController extends Controller
      */
     public function show(Kelas $kelas)
     {
+        $data = Kelas::with('jurusan')->where('id', $kelas->id)->first();
+
         return response()->json([
             'status' => 'success',
-            'data' => $kelas,
+            'data' => $data,
         ]);    
     }
 
