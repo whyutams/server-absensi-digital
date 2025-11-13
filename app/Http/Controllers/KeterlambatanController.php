@@ -38,6 +38,7 @@ class KeterlambatanController extends Controller
             "keterangan" => "required|string",
             "gambar" => "required|image|mimes:jpg,jpeg,png",
             "siswa_id" => "required|exists:siswas,id",
+            "date" => "required"
         ]);
 
         // Handle file upload

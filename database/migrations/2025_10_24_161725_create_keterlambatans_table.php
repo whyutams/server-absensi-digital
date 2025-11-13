@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -15,6 +14,7 @@ return new class extends Migration
             $table->id();
             $table->text('keterangan')->nullable();
             $table->string('gambar')->nullable();
+            $table->timestamp('date')->nullable();
             $table->integer('siswa_id')->unsigned()->foreign()->references('id')->on('siswas')->onDelete('cascade');
             $table->integer('created_by')->unsigned()->foreign()->references('id')->on('users')->onDelete('set null')->nullable();
             $table->timestamps();
