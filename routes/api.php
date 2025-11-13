@@ -83,8 +83,11 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('/perizinan', PerizinanController::class)->only(['index', 'show'])->names('perizinan');
     });
 
-    Route::middleware(['role:' . User::ROLE_GURU_PIKET . ',' . User::ROLE_KESISWAAN])->group(function () {
+    Route::middleware(['role:' . User::ROLE_GURU_PIKET . ',' . User::ROLE_KESISWAAN . ',' . User::ROLE_GURU])->group(function () {
         Route::apiResource('/perizinan', PerizinanController::class)->only(['store', 'destroy'])->names('perizinan');
+    });
+
+    Route::middleware(['role:' . User::ROLE_GURU_PIKET . ',' . User::ROLE_KESISWAAN])->group(function () {
         Route::put('/perizinan/status', [PerizinanController::class, 'status'])->name('perizinan.status');
     });
 });
