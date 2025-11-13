@@ -11,6 +11,7 @@ class Perizinan extends Model
         'gambar',
         'status',
         'siswa_id',
+        'date',
         'created_by',
     ];
 

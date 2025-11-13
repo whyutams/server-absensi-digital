@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->id();
             $table->text('keterangan')->nullable();
             $table->string('gambar')->nullable();
+            $table->timestamp('date')->nullable();
             $table->enum('status', [Perizinan::STATUS_APPROVED, Perizinan::STATUS_PENDING, Perizinan::STATUS_REJECTED])->default(Perizinan::STATUS_PENDING);
             $table->integer('siswa_id')->unsigned()->foreign()->references('id')->on('siswas')->onDelete('cascade');
             $table->integer('created_by')->unsigned()->foreign()->references('id')->on('users')->onDelete('cascade')->nullable();
