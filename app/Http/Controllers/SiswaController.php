@@ -55,7 +55,10 @@ class SiswaController extends Controller
      */
     public function show(Siswa $siswa)
     {
-        //
+        return response()->json([
+            'status' => 'success',
+            'data' => $siswa,
+        ]);
     }
 
     /**

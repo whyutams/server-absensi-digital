@@ -53,7 +53,10 @@ class KelasController extends Controller
      */
     public function show(Kelas $kelas)
     {
-        //
+        return response()->json([
+            'status' => 'success',
+            'data' => $kelas,
+        ]);    
     }
 
     /**

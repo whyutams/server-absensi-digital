@@ -52,7 +52,10 @@ class JurusanController extends Controller
      */
     public function show(Jurusan $jurusan)
     {
-        //
+        return response()->json([
+            'status' => 'success',
+            'data' => $jurusan,
+        ]);
     }
 
     /**
@@ -69,8 +72,8 @@ class JurusanController extends Controller
     public function update(Request $request, Jurusan $jurusan)
     {
         $request->validate([
-            'nama' => 'nullable|string|unique:jurusans,nama,'.$jurusan->id,
-            'alias' => 'nullable|string|unique:jurusans,alias,'.$jurusan->id,
+            'nama' => 'nullable|string|unique:jurusans,nama,' . $jurusan->id,
+            'alias' => 'nullable|string|unique:jurusans,alias,' . $jurusan->id,
             'deskripsi' => 'nullable|string',
         ]);
 

@@ -65,7 +65,10 @@ class KeterlambatanController extends Controller
      */
     public function show(Keterlambatan $keterlambatan)
     {
-        //
+        return response()->json([
+            'status' => 'success',
+            'data' => $keterlambatan,
+        ]);
     }
 
     /**

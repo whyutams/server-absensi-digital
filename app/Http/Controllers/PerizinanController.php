@@ -65,7 +65,10 @@ class PerizinanController extends Controller
      */
     public function show(Perizinan $perizinan)
     {
-        //
+        return response()->json([
+            'status' => 'success',
+            'data' => $perizinan,
+        ]);
     }
 
     /**

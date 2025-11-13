@@ -42,15 +42,15 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/info', [GeneralController::class, 'info']);
 
     Route::middleware(['role:' . User::ROLE_SUPERADMIN . ',' . User::ROLE_KEPSEK])->group(function () {
-        Route::apiResource('/jurusan', JurusanController::class)->only(['index', 'store', 'update', 'destroy'])->names('jurusan');
-        Route::apiResource('/users', UserController::class)->only(['index', 'store', 'update', 'destroy'])->names('users');
-        Route::apiResource('/kelas', KelasController::class)->only(['index', 'store', 'update', 'destroy'])->parameters(['kelas' => 'kelas'])->names('kelas');
+        Route::apiResource('/jurusan', JurusanController::class)->names('jurusan');
+        Route::apiResource('/users', UserController::class)->names('users');
+        Route::apiResource('/kelas', KelasController::class)->parameters(['kelas' => 'kelas'])->names('kelas');
         Route::get('/kelas/list', [KelasController::class, 'list_aturan_kelas'])->name('kelas.list');
         Route::post('/kelas/list/generate', [KelasController::class, 'generate_list_aturan_kelas'])->name('kelas.list.generate');
     });
 
     Route::middleware(['role:' . User::ROLE_GURU . ',' . User::ROLE_GURU_PIKET])->group(function () {
-        Route::apiResource('/siswa', SiswaController::class)->only(['index'])->names('siswa');
+        Route::apiResource('/siswa', SiswaController::class)->only(['index', 'show'])->names('siswa');
     });
 
     Route::middleware(['role:' . User::ROLE_GURU_PIKET])->group(function () {
@@ -65,7 +65,7 @@ Route::middleware('auth:sanctum')->group(function () {
         User::ROLE_KESISWAAN,
         User::ROLE_ORANGTUA,
     ])])->group(function () {
-        Route::apiResource('/keterlambatan', KeterlambatanController::class)->only(['index'])->names('keterlambatan');
+        Route::apiResource('/keterlambatan', KeterlambatanController::class)->only(['index', 'show'])->names('keterlambatan');
     });
 
     Route::middleware(['role:' . User::ROLE_GURU_PIKET . ',' . User::ROLE_KESISWAAN])->group(function () {
@@ -80,7 +80,7 @@ Route::middleware('auth:sanctum')->group(function () {
         User::ROLE_KESISWAAN,
         User::ROLE_ORANGTUA,
     ])])->group(function () {
-        Route::apiResource('/perizinan', PerizinanController::class)->only(['index'])->names('perizinan');
+        Route::apiResource('/perizinan', PerizinanController::class)->only(['index', 'show'])->names('perizinan');
     });
 
     Route::middleware(['role:' . User::ROLE_GURU_PIKET . ',' . User::ROLE_KESISWAAN])->group(function () {
