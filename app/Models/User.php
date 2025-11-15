@@ -66,4 +66,5 @@ class User extends Authenticatable
     const ROLE_KESISWAAN = 'kesiswaan';
     const ROLE_KEPSEK = 'kepsek';
     const ROLE_ORANGTUA = 'orangtua';
+    const ROLE_SATPAM = 'satpam';
 }
