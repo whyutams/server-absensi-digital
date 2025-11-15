@@ -18,7 +18,7 @@ class SatpamSeeder extends Seeder
             [
                 'name' => 'Satpam1',
                 'email' => 'satpam1@sekolah.com',
-                'password' => Hash::make('password'),
+                'password' => Hash::make('password123'),
                 'role' => User::ROLE_SATPAM,
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -26,7 +26,7 @@ class SatpamSeeder extends Seeder
             [
                 'name' => 'Satpam2',
                 'email' => 'satpam2@sekolah.com',
-                'password' => Hash::make('password'),
+                'password' => Hash::make('password123'),
                 'role' => User::ROLE_SATPAM,
                 'created_at' => now(),
                 'updated_at' => now(),
