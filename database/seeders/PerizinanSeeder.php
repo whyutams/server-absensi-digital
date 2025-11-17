@@ -16,7 +16,7 @@ class PerizinanSeeder extends Seeder
         DB::table('perizinans')->insert([
             [
                 'keterangan' => 'Izin keluar sekolah karena harus kontrol ke rumah sakit.',
-                'gambar' => 'uploads/perizinan/keluar_rs.jpg',
+                'gambar' => null,
                 'status' => Perizinan::STATUS_APPROVED,
                 'siswa_id' => 1,
                 'created_by' => 2,
@@ -25,7 +25,7 @@ class PerizinanSeeder extends Seeder
             ],
             [
                 'keterangan' => 'Izin keluar sekolah karena ada urusan keluarga mendesak.',
-                'gambar' => 'uploads/perizinan/keluar_keluarga.jpg',
+                'gambar' => null,
                 'status' => Perizinan::STATUS_PENDING,
                 'siswa_id' => 2,
                 'created_by' => 3,
@@ -34,7 +34,7 @@ class PerizinanSeeder extends Seeder
             ],
             [
                 'keterangan' => 'Izin keluar sekolah untuk mengikuti lomba antar sekolah di luar kota.',
-                'gambar' => 'uploads/perizinan/keluar_lomba.jpg',
+                'gambar' => null,
                 'status' => Perizinan::STATUS_APPROVED,
                 'siswa_id' => 3,
                 'created_by' => 3,
@@ -43,7 +43,7 @@ class PerizinanSeeder extends Seeder
             ],
             [
                 'keterangan' => 'Izin keluar sekolah karena dipanggil orang tua mendadak.',
-                'gambar' => 'uploads/perizinan/keluar_orangtua.jpg',
+                'gambar' => null,
                 'status' => Perizinan::STATUS_REJECTED,
                 'siswa_id' => 4,
                 'created_by' => 2,
@@ -52,7 +52,7 @@ class PerizinanSeeder extends Seeder
             ],
             [
                 'keterangan' => 'Izin keluar sekolah untuk membeli obat di apotek terdekat.',
-                'gambar' => 'uploads/perizinan/keluar_apotek.jpg',
+                'gambar' => null,
                 'status' => Perizinan::STATUS_PENDING,
                 'siswa_id' => 5,
                 'created_by' => 1,

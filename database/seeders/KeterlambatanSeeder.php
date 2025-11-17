@@ -15,7 +15,7 @@ class KeterlambatanSeeder extends Seeder
         DB::table('keterlambatans')->insert([
             [
                 'keterangan' => 'Terlambat karena hujan deras di pagi hari.',
-                'gambar' => 'uploads/keterlambatan/hujan.jpg',
+                'gambar' => null,
                 'siswa_id' => 1, // pastikan id siswa ini ada di tabel siswas
                 'created_by' => 2, // id user (guru piket/kesiswaan)
                 'created_at' => now()->subDays(2),
@@ -23,7 +23,7 @@ class KeterlambatanSeeder extends Seeder
             ],
             [
                 'keterangan' => 'Rantai sepeda terlepas di perjalanan.',
-                'gambar' => 'uploads/keterlambatan/sepeda.jpg',
+                'gambar' => null,
                 'siswa_id' => 2,
                 'created_by' => 2,
                 'created_at' => now()->subDays(1),
@@ -31,7 +31,7 @@ class KeterlambatanSeeder extends Seeder
             ],
             [
                 'keterangan' => 'Terlambat karena membantu orang tua di rumah.',
-                'gambar' => 'uploads/keterlambatan/orangtua.jpg',
+                'gambar' => null,
                 'siswa_id' => 3,
                 'created_by' => 3,
                 'created_at' => now(),
@@ -39,7 +39,7 @@ class KeterlambatanSeeder extends Seeder
             ],
             [
                 'keterangan' => 'Bangun kesiangan karena alarm tidak berbunyi.',
-                'gambar' => 'uploads/keterlambatan/alarm.jpg',
+                'gambar' => null,
                 'siswa_id' => 4,
                 'created_by' => 3,
                 'created_at' => now(),
@@ -47,7 +47,7 @@ class KeterlambatanSeeder extends Seeder
             ],
             [
                 'keterangan' => 'Transportasi umum mengalami mogok di tengah jalan.',
-                'gambar' => 'uploads/keterlambatan/mogok.jpg',
+                'gambar' => null,
                 'siswa_id' => 5,
                 'created_by' => 1,
                 'created_at' => now(),
