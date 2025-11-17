@@ -16,8 +16,9 @@ class KeterlambatanSeeder extends Seeder
             [
                 'keterangan' => 'Terlambat karena hujan deras di pagi hari.',
                 'gambar' => null,
-                'siswa_id' => 1, // pastikan id siswa ini ada di tabel siswas
-                'created_by' => 2, // id user (guru piket/kesiswaan)
+                'siswa_id' => 1,
+                'created_by' => 2,
+                'date' => now()->subDays(2),
                 'created_at' => now()->subDays(2),
                 'updated_at' => now()->subDays(2),
             ],
@@ -26,6 +27,7 @@ class KeterlambatanSeeder extends Seeder
                 'gambar' => null,
                 'siswa_id' => 2,
                 'created_by' => 2,
+                'date' => now()->subDays(1),
                 'created_at' => now()->subDays(1),
                 'updated_at' => now()->subDays(1),
             ],
@@ -34,6 +36,7 @@ class KeterlambatanSeeder extends Seeder
                 'gambar' => null,
                 'siswa_id' => 3,
                 'created_by' => 3,
+                'date' => now(),
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -42,6 +45,7 @@ class KeterlambatanSeeder extends Seeder
                 'gambar' => null,
                 'siswa_id' => 4,
                 'created_by' => 3,
+                'date' => now(),
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -50,6 +54,7 @@ class KeterlambatanSeeder extends Seeder
                 'gambar' => null,
                 'siswa_id' => 5,
                 'created_by' => 1,
+                'date' => now(),
                 'created_at' => now(),
                 'updated_at' => now(),
             ],

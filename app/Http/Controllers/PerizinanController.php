@@ -37,6 +37,7 @@ class PerizinanController extends Controller
         $validated = $request->validate([
             "siswa_id" => "required|exists:siswas,id",
             "keterangan" => "required|string",
+            "date" => "required",
             "gambar" => "required|image|mimes:jpeg,png,jpg",
         ]);
 
