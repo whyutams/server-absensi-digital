@@ -16,19 +16,19 @@ class UserSeeder extends Seeder
     {
         DB::table('users')->insert([
             [
-                'nama' => 'Admin',
+                'nama' => 'ADMIN SMKN 1 GORONGTALO',
                 'role' => User::ROLE_SUPERADMIN,
                 'username' => 'adminsmea25',
                 'password' => bcrypt('password123'),
             ],
             [
-                'nama' => 'Piket',
+                'nama' => 'PIKET SMKN 1 GORONGTALO',
                 'role' => User::ROLE_GURU_PIKET,
                 'username' => 'piketsmea25',
                 'password' => bcrypt('password123'),
             ],
             [
-                'nama' => 'Kesiswaan',
+                'nama' => 'KESISWAAN SMKN 1 GORONGTALO',
                 'role' => User::ROLE_KESISWAAN,
                 'username' => 'kesiswaansmea25',
                 'password' => bcrypt('password123'),
@@ -36,49 +36,49 @@ class UserSeeder extends Seeder
             [
                 'nama' => 'Rizal Pakaya',
                 'role' => User::ROLE_GURU,
-                'username' => 'gurusmea25',
+                'username' => 'rizalpakaya',
                 'password' => bcrypt('password123'),
             ],
             [
                 'nama' => 'Siti Aminah',
                 'role' => User::ROLE_GURU,
-                'username' => 'gurusmea26',
+                'username' => 'sitiaminah',
                 'password' => bcrypt('password123'),
             ],
             [
                 'nama' => 'Budi Santoso',
                 'role' => User::ROLE_GURU,
-                'username' => 'gurusmea27',
+                'username' => 'budisantoso',
                 'password' => bcrypt('password123'),
             ],
             [
                 'nama' => 'Dewi Kartika',
                 'role' => User::ROLE_ORANGTUA,
-                'username' => 'ortu1',
+                'username' => 'dewikartika',
                 'password' => bcrypt('password123'),
             ],
             [
                 'nama' => 'Agus Salim',
                 'role' => User::ROLE_ORANGTUA,
-                'username' => 'ortu2',
+                'username' => 'agussalim',
                 'password' => bcrypt('password123'),
             ],
             [
                 'nama' => 'Lina Marlina',
                 'role' => User::ROLE_ORANGTUA,
-                'username' => 'ortu3',
+                'username' => 'linamarlina',
                 'password' => bcrypt('password123'),
             ],
             [
                 'nama' => 'Hendra Wijaya',
                 'role' => User::ROLE_ORANGTUA,
-                'username' => 'ortu4',
+                'username' => 'hendrawijaya',
                 'password' => bcrypt('password123'),
             ],
             [
                 'nama' => 'Slamet Riyadi',
                 'role' => User::ROLE_KEPSEK,
-                'username' => 'kepseksmea25',
+                'username' => 'slametriyadi',
                 'password' => bcrypt('password123'),
             ],
         ]);
