@@ -74,8 +74,8 @@ class GeneralController extends Controller
                     'perizinan' => $perizinan,
                     'siswa' => $siswa,
                     'user' => $user->latest()->get(),
-                    'user_guru' => $user->where('role', User::ROLE_GURU)->latest()->get(),
                     'user_orangtua' => $user->where('role', User::ROLE_ORANGTUA)->latest()->get(),
+                    'user_guru' => $user->where('role', User::ROLE_GURU)->latest()->get(),
                 ],
                 'counts' => [
                     'total_kelas' => count($kelas),
