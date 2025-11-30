@@ -66,6 +66,9 @@ class GeneralController extends Controller
                 ],
             ];
         } else if (Auth::user()->role == User::ROLE_SUPERADMIN || Auth::user()->role == User::ROLE_KEPSEK) {
+            $data_orangtua = $user;
+            $data_guru = $user;
+
             $data = [
                 'data' => [
                     'kelas' => $kelas,
@@ -74,8 +77,8 @@ class GeneralController extends Controller
                     'perizinan' => $perizinan,
                     'siswa' => $siswa,
                     'user' => $user->latest()->get(),
-                    'user_orangtua' => $user->where('role', User::ROLE_ORANGTUA)->latest()->get(),
-                    'user_guru' => $user->where('role', User::ROLE_GURU)->latest()->get(),
+                    'user_guru' => $data_guru->where('role', User::ROLE_GURU)->latest()->get(),
+                    'user_orangtua' => $data_orangtua->where('role', User::ROLE_ORANGTUA)->latest()->get(),
                 ],
                 'counts' => [
                     'total_kelas' => count($kelas),
@@ -84,8 +87,8 @@ class GeneralController extends Controller
                     'total_perizinan' => count($perizinan),
                     'total_siswa' => count($siswa),
                     'total_user' => count($user->latest()->get()),
-                    'total_user_guru' => count($user->where('role', User::ROLE_GURU)->latest()->get()),
-                    'total_user_orangtua' => count($user->where('role', User::ROLE_ORANGTUA)->latest()->get()),
+                    'total_user_guru' => count($data_guru->where('role', User::ROLE_GURU)->latest()->get()),
+                    'total_user_orangtua' => count($data_orangtua->where('role', User::ROLE_ORANGTUA)->latest()->get()),
                 ],
             ];
         } else {
