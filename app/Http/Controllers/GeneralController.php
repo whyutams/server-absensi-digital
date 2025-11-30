@@ -76,6 +76,7 @@ class GeneralController extends Controller
                     'user' => $user->latest()->get(),
                     'user_guru' => User::with(['jurusan'])->where('role', User::ROLE_GURU)->latest()->get(),
                     'user_orangtua' => User::where('role', User::ROLE_ORANGTUA)->latest()->get(),
+                    'user_satpam' => User::where('role', User::ROLE_SATPAM)->latest()->get(),
                 ],
                 'counts' => [
                     'total_kelas' => count($kelas),
@@ -86,6 +87,7 @@ class GeneralController extends Controller
                     'total_user' => count($user->latest()->get()),
                     'total_user_guru' => count(User::with(['jurusan'])->where('role', User::ROLE_GURU)->latest()->get()),
                     'total_user_orangtua' => count(User::where('role', User::ROLE_ORANGTUA)->latest()->get()),
+                    'total_user_satpam' => count(User::where('role', User::ROLE_SATPAM)->latest()->get()),
                 ],
             ];
         } else {
