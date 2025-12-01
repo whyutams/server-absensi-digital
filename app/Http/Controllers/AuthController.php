@@ -120,4 +120,33 @@ class AuthController extends Controller
             'user' => $user,
         ], 200);
     }
+
+    
+    public function update_password(Request $request)
+{
+    $request->validate([
+        'password_lama' => 'required|string',
+        'password_baru' => 'required|string|min:6|confirmed', // butuh field password_baru_confirmation
+    ]);
+
+    $user = Auth::user();
+
+    if (!Hash::check($request->password_lama, $user->password)) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Password lama tidak sesuai'
+        ], 400);
+    }
+
+    $user->password = Hash::make($request->password_baru);
+    $user->save();
+
+    return response()->json([
+        'status' => 'success',
+        'message' => 'Password berhasil diperbarui'
+    ], 200);
 }
+
+}
+
+

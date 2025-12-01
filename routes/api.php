@@ -40,6 +40,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/whoami', [AuthController::class, 'logged_user']);
     Route::put('/profile/edit', [AuthController::class, 'update_profile']);
     Route::get('/info', [GeneralController::class, 'info']);
+    Route::post('/reset-password', [AuthController::class, 'reset']);
 
     Route::middleware(['role:' . User::ROLE_SUPERADMIN . ',' . User::ROLE_KEPSEK])->group(function () {
         Route::apiResource('/jurusan', JurusanController::class)->names('jurusan');
