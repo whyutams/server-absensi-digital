@@ -49,11 +49,11 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/kelas/list/generate', [KelasController::class, 'generate_list_aturan_kelas'])->name('kelas.list.generate');
     });
 
-    Route::middleware(['role:' . User::ROLE_GURU . ',' . User::ROLE_GURU_PIKET])->group(function () {
+    Route::middleware(['role:' . User::ROLE_GURU . ',' . User::ROLE_GURU_PIKET . ',' . User::ROLE_KESISWAAN . ',' . User::ROLE_BK . User::ROLE_SUPERADMIN . ',' . User::ROLE_KEPSEK])->group(function () {
         Route::apiResource('/siswa', SiswaController::class)->only(['index', 'show'])->names('siswa');
     });
 
-    Route::middleware(['role:' . User::ROLE_GURU_PIKET])->group(function () {
+    Route::middleware(['role:' . User::ROLE_GURU_PIKET . ',' . User::ROLE_KESISWAAN . ',' . User::ROLE_BK  . ',' . User::ROLE_SUPERADMIN . ',' . User::ROLE_KEPSEK])->group(function () {
         Route::apiResource('/siswa', SiswaController::class)->only(['store', 'update', 'destroy'])->names('siswa');
     });
 
@@ -63,12 +63,13 @@ Route::middleware('auth:sanctum')->group(function () {
         User::ROLE_GURU,
         User::ROLE_GURU_PIKET,
         User::ROLE_KESISWAAN,
+        User::ROLE_BK,
         User::ROLE_ORANGTUA,
     ])])->group(function () {
         Route::apiResource('/keterlambatan', KeterlambatanController::class)->only(['index', 'show'])->names('keterlambatan');
     });
 
-    Route::middleware(['role:' . User::ROLE_GURU_PIKET . ',' . User::ROLE_KESISWAAN])->group(function () {
+    Route::middleware(['role:' . User::ROLE_GURU_PIKET . ',' . User::ROLE_KESISWAAN . ',' . User::ROLE_BK])->group(function () {
         Route::apiResource('/keterlambatan', KeterlambatanController::class)->only(['store', 'destroy'])->names('keterlambatan');
     });
 
@@ -79,15 +80,17 @@ Route::middleware('auth:sanctum')->group(function () {
         User::ROLE_GURU_PIKET,
         User::ROLE_KESISWAAN,
         User::ROLE_ORANGTUA,
+        User::ROLE_BK,
+        User::ROLE_SATPAM,
     ])])->group(function () {
         Route::apiResource('/perizinan', PerizinanController::class)->only(['index', 'show'])->names('perizinan');
     });
 
-    Route::middleware(['role:' . User::ROLE_GURU_PIKET . ',' . User::ROLE_KESISWAAN . ',' . User::ROLE_GURU])->group(function () {
+    Route::middleware(['role:' . User::ROLE_GURU_PIKET . ',' . User::ROLE_KESISWAAN . ',' . User::ROLE_BK . ',' . User::ROLE_GURU])->group(function () {
         Route::apiResource('/perizinan', PerizinanController::class)->only(['store', 'destroy'])->names('perizinan');
     });
 
-    Route::middleware(['role:' . User::ROLE_GURU_PIKET . ',' . User::ROLE_KESISWAAN])->group(function () {
+    Route::middleware(['role:' . User::ROLE_GURU_PIKET . ',' . User::ROLE_KESISWAAN . ',' . User::ROLE_BK])->group(function () {
         Route::put('/perizinan/status', [PerizinanController::class, 'status'])->name('perizinan.status');
     });
 });
