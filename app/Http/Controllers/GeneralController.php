@@ -8,7 +8,6 @@ use App\Models\Keterlambatan;
 use App\Models\Perizinan;
 use App\Models\Siswa;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class GeneralController extends Controller
@@ -24,11 +23,11 @@ class GeneralController extends Controller
 
         $data = [];
 
-        if (Auth::user()->role == User::ROLE_GURU_PIKET || Auth::user()->role == User::ROLE_KESISWAAN || Auth::user()->role == User::ROLE_GURU) {
+        if (Auth::user()->role == User::ROLE_GURU_PIKET || Auth::user()->role == User::ROLE_KESISWAAN || Auth::user()->role == User::ROLE_BK || Auth::user()->role == User::ROLE_GURU) {
             $keterlambatan = [];
             $perizinan = [];
 
-            if (Auth::user()->role == User::ROLE_GURU_PIKET || Auth::user()->role == User::ROLE_KESISWAAN) {
+            if (Auth::user()->role == User::ROLE_GURU_PIKET || Auth::user()->role == User::ROLE_KESISWAAN || Auth::user()->role == User::ROLE_BK) {
                 $keterlambatan = Keterlambatan::with(['created_by', 'siswa.jurusan', 'siswa.orangtua'])->latest()->get();
                 $perizinan = Perizinan::with(['created_by', 'siswa.jurusan', 'siswa.orangtua'])->latest()->get();
             } else {
@@ -90,7 +89,7 @@ class GeneralController extends Controller
                     'total_user_satpam' => count(User::where('role', User::ROLE_SATPAM)->latest()->get()),
                 ],
             ];
-        } else {
+        } else if (Auth::user()->role == User::ROLE_ORANGTUA) {
             $keterlambatan = Keterlambatan::with(['created_by', 'siswa.jurusan', 'siswa.orangtua'])
                 ->whereHas('siswa', function ($query) {
                     $query->where('orangtua_id', Auth::user()->id);
@@ -111,6 +110,15 @@ class GeneralController extends Controller
                 ],
                 'counts' => [
                     'total_keterlambatan' => count($keterlambatan),
+                    'total_perizinan' => count($perizinan),
+                ],
+            ];
+        } else {
+            $data = [
+                'data' => [
+                    'perizinan' => $perizinan,
+                ],
+                'counts' => [
                     'total_perizinan' => count($perizinan),
                 ],
             ];
