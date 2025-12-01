@@ -81,6 +81,18 @@ class UserSeeder extends Seeder
                 'username' => 'slametriyadi',
                 'password' => bcrypt('password123'),
             ],
+            [
+                'nama' => 'SATPAM SMKN 1 GORONGTALO',
+                'role' => User::ROLE_SATPAM,
+                'username' => 'satpamsmea25',
+                'password' => bcrypt('password123'),
+            ],
+             [
+                'nama' => 'BK SMKN 1 GORONGTALO',
+                'role' => User::ROLE_BK,
+                'username' => 'bksmea25',
+                'password' => bcrypt('password123'),
+            ],
         ]);
     }
 }
