@@ -20,7 +20,7 @@ class GeneralController extends Controller
         $keterlambatan = Keterlambatan::with(['created_by', 'siswa.jurusan', 'siswa.orangtua'])->latest()->get();
         $perizinan = Perizinan::with(['created_by', 'siswa.jurusan', 'siswa.orangtua'])->latest()->get();
         $siswa = Siswa::with(['jurusan', 'orangtua'])->latest()->get();
-        $user = User::with(['jurusan'])->where('role', '!=', User::ROLE_SUPERADMIN)->where('role', '!=', User::ROLE_KEPSEK)->latest()->get();
+        $user = User::with(['jurusan'])->where('role', '!=', User::ROLE_SUPERADMIN)->where('role', '!=', User::ROLE_KEPSEK);
 
         $data = [];
 
@@ -73,9 +73,10 @@ class GeneralController extends Controller
                     'keterlambatan' => $keterlambatan,
                     'perizinan' => $perizinan,
                     'siswa' => $siswa,
-                    'user' => $user,
-                    'user_guru' => $user->where('role', User::ROLE_GURU),
-                    'user_orangtua' => $user->where('role', User::ROLE_ORANGTUA),
+                    'user' => $user->latest()->get(),
+                    'user_guru' => User::with(['jurusan'])->where('role', User::ROLE_GURU)->latest()->get(),
+                    'user_orangtua' => User::where('role', User::ROLE_ORANGTUA)->latest()->get(),
+                    'user_satpam' => User::where('role', User::ROLE_SATPAM)->latest()->get(),
                 ],
                 'counts' => [
                     'total_kelas' => count($kelas),
@@ -83,9 +84,10 @@ class GeneralController extends Controller
                     'total_keterlambatan' => count($keterlambatan),
                     'total_perizinan' => count($perizinan),
                     'total_siswa' => count($siswa),
-                    'total_user' => count($user),
-                    'total_user_guru' => count($user->where('role', User::ROLE_GURU)),
-                    'total_user_orangtua' => count($user->where('role', User::ROLE_ORANGTUA)),
+                    'total_user' => count($user->latest()->get()),
+                    'total_user_guru' => count(User::with(['jurusan'])->where('role', User::ROLE_GURU)->latest()->get()),
+                    'total_user_orangtua' => count(User::where('role', User::ROLE_ORANGTUA)->latest()->get()),
+                    'total_user_satpam' => count(User::where('role', User::ROLE_SATPAM)->latest()->get()),
                 ],
             ];
         } else {
