@@ -113,6 +113,13 @@ class PerizinanController extends Controller
             "status" => "required|in:" . Perizinan::STATUS_REJECTED . "," . Perizinan::STATUS_APPROVED,
         ]);
 
+        if($perizinan->status != Perizinan::STATUS_PENDING){
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Status perizinan sudah diperbarui sebelumnya.',
+            ], 400);
+        };
+
         $perizinan->update([
             "status" => $validated['status'],
         ]);
