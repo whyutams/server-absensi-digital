@@ -37,7 +37,7 @@ class UserController extends Controller
         $validated = $request->validate([
             "nip" => "required|string|unique:users,nip",
             "nama" => "required|string",
-            "nomor_hp" => "required|unique:users,nomor_hp",
+            "nomor_hp" => "nullable|unique:users,nomor_hp",
             "email" => "nullable|email|unique:users,email",
             "alamat" => "nullable|string",
             "foto_profil" => "nullable|image|mimes:jpg,jpeg,png",
