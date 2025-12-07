@@ -55,6 +55,7 @@ class GeneralController extends Controller
                     'keterlambatan' => $keterlambatan,
                     'perizinan' => $perizinan,
                     'siswa' => $siswa,
+                    'user_orangtua' => User::where('role', User::ROLE_ORANGTUA)->latest()->get(),
                 ],
                 'counts' => [
                     'total_kelas' => count($kelas),
@@ -62,6 +63,7 @@ class GeneralController extends Controller
                     'total_keterlambatan' => count($keterlambatan),
                     'total_perizinan' => count($perizinan),
                     'total_siswa' => count($siswa),
+                    'total_user_orangtua' => count(User::where('role', User::ROLE_ORANGTUA)->latest()->get()),
                 ],
             ];
         } else if (Auth::user()->role == User::ROLE_SUPERADMIN || Auth::user()->role == User::ROLE_KEPSEK) {
