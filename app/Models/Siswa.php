@@ -11,7 +11,7 @@ class Siswa extends Model
         'nama',
         'nomor_hp',
         'jurusan_id',
-        'kelas_id',
+        'kelas',
         'orangtua_id',
     ];
 
