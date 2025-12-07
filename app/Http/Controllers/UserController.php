@@ -41,7 +41,7 @@ class UserController extends Controller
             "email" => "nullable|email|unique:users,email",
             "alamat" => "nullable|string",
             "foto_profil" => "nullable|image|mimes:jpg,jpeg,png",
-            "role" => "required|in:" . User::ROLE_SUPERADMIN . "," . User::ROLE_GURU_PIKET . "," . User::ROLE_GURU . "," . User::ROLE_KESISWAAN . "," . User::ROLE_KEPSEK,
+            "role" => "required|in:" . User::ROLE_SUPERADMIN . "," . User::ROLE_GURU_PIKET . "," . User::ROLE_GURU . "," . User::ROLE_KESISWAAN . "," . User::ROLE_KEPSEK . "," . User::ROLE_BK  . "," . User::ROLE_SATPAM . "," . User::ROLE_ORANGTUA,
             "username" => "required|string|unique:users,username",
             "password" => "required|string|min:6",
         ]);
