@@ -113,7 +113,7 @@ class PerizinanController extends Controller
             "status" => "required|in:" . Perizinan::STATUS_REJECTED . "," . Perizinan::STATUS_APPROVED,
         ]);
 
-        if($perizinan->status != Perizinan::STATUS_PENDING){
+        if ($perizinan->status != Perizinan::STATUS_PENDING) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Status perizinan sudah diperbarui sebelumnya.',
@@ -128,5 +128,30 @@ class PerizinanController extends Controller
             'status' => 'success',
             'message' => 'Data berhasil diperbarui.',
         ]);
+    }
+
+    public function export_excel(Request $request)
+    {
+        $request->validate([
+            'date_from' => 'nullable|date',
+            'date_to' => 'nullable|date|after_or_equal:date_from',
+        ]);
+
+        $query = Perizinan::query();
+
+        if ($request->filled('date_from')) {
+            $query->whereDate('created_at', '>=', $request->date_from);
+        }
+
+        if ($request->filled('date_to')) {
+            $query->whereDate('created_at', '<=', $request->date_to);
+        }
+
+        $perizinans = $query->with(['siswa', 'created_by'])->get();
+
+        return \Maatwebsite\Excel\Facades\Excel::download(
+            new \App\Exports\PerizinanExport($perizinans),
+            'perizinan_' . now()->format('Y-m-d_H-i-s') . '.xlsx'
+        );
     }
 }

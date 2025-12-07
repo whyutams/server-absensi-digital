@@ -94,4 +94,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::middleware(['role:' . User::ROLE_GURU_PIKET . ',' . User::ROLE_KESISWAAN . ',' . User::ROLE_BK])->group(function () {
         Route::put('/perizinan/status/{perizinan}', [PerizinanController::class, 'status'])->name('perizinan.status');
     });
+
+    Route::post('/perizinan/export/excel', [PerizinanController::class, 'export_excel'])->name('perizinan.export.excel');
 });
