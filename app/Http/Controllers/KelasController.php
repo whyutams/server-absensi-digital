@@ -142,7 +142,7 @@ class KelasController extends Controller
                     'kelas' => $k->kelas,
                     'jumlah_kelas' => $k->jumlah_kelas,
                     'jurusan' => $k->jurusan->nama ?? null,
-                    'nama_kelas' => strtoupper($k->kelas) . ' ' . strtoupper($k->jurusan->alias ?? $k->jurusan->nama) . ' ' . $i
+                    'nama_kelas' => $this->toRoman($k->kelas) . ' ' . strtoupper($k->jurusan->alias ?? $k->jurusan->nama) . ' ' . $i
                 ];
             }
         }
@@ -151,5 +151,25 @@ class KelasController extends Controller
             'status' => 'success',
             'data' => $result
         ]);
+    }
+
+    private function toRoman($num)
+    {
+        $romanNumerals = [
+            10 => 'X',
+            9 => 'IX',
+            5 => 'V',
+            4 => 'IV',
+            1 => 'I'
+        ];
+
+        $roman = '';
+        foreach ($romanNumerals as $value => $numeral) {
+            while ($num >= $value) {
+                $roman .= $numeral;
+                $num -= $value;
+            }
+        }
+        return $roman;
     }
 }
