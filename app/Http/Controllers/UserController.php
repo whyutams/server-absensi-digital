@@ -35,7 +35,7 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            "nip" => "required|string|unique:users,nip",
+            "nip" => "nullable|string|unique:users,nip",
             "nama" => "required|string",
             "nomor_hp" => "nullable|unique:users,nomor_hp",
             "email" => "nullable|email|unique:users,email",
