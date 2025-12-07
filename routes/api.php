@@ -46,7 +46,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('/jurusan', JurusanController::class)->names('jurusan');
         Route::apiResource('/users', UserController::class)->names('users');
         Route::apiResource('/kelas', KelasController::class)->parameters(['kelas' => 'kelas'])->names('kelas');
-        Route::get('/kelas/list', [KelasController::class, 'list_aturan_kelas'])->name('kelas.list');
+        Route::get('/list/kelas', [KelasController::class, 'list_aturan_kelas'])->name('kelas.list');
         Route::post('/kelas/list/generate', [KelasController::class, 'generate_list_aturan_kelas'])->name('kelas.list.generate');
     });
 
