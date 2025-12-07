@@ -18,46 +18,55 @@ class JurusanSeeder extends Seeder
                 'nama' => 'Pengembangan Perangkat Lunak dan Gim',
                 'alias' => 'PPLG',
                 'deskripsi' => 'Jurusan yang fokus pada pengembangan perangkat lunak dan gim.',
+                'created_at' => now(),
             ],
             [
                 'nama' => 'Teknik Jaringan Komputer dan Telekomunikasi',
                 'alias' => 'TJKT',
                 'deskripsi' => 'Jurusan yang fokus pada jaringan komputer dan telekomunikasi.',
+                'created_at' => now(),
             ],
             [
                 'nama' => 'Desain Komunikasi Visual',
                 'alias' => 'DKV',
                 'deskripsi' => 'Jurusan yang fokus pada desain komunikasi visual.',
+                'created_at' => now(),
             ],
             [
                 'nama' => 'Broadcasting dan Perfilman',
                 'alias' => 'BP',
                 'deskripsi' => 'Jurusan yang fokus pada broadcasting dan perfilman.',
+                'created_at' => now(),
             ],
             [
                 'nama' => 'Manajemen Perkantoran dan Layanan Bisnis',
                 'alias' => 'MPLB',
                 'deskripsi' => 'Jurusan yang fokus pada manajemen perkantoran dan layanan bisnis.',
+                'created_at' => now(),
             ],
             [
                 'nama' => 'Akuntansi dan Keuangan Lembaga',
                 'alias' => 'AKL',
                 'deskripsi' => 'Jurusan yang fokus pada akuntansi dan keuangan lembaga.',
+                'created_at' => now(),
             ],
             [
                 'nama' => 'Pemasaran',
                 'alias' => 'PM',
                 'deskripsi' => 'Jurusan yang fokus pada pemasaran.',
+                'created_at' => now(),
             ],
             [
                 'nama' => 'Usaha Layanan Pariwisata',
                 'alias' => 'ULP',
                 'deskripsi' => 'Jurusan yang fokus pada usaha layanan pariwisata.',
+                'created_at' => now(),
             ],
             [
                 'nama' => 'Kimia Industri',
                 'alias' => 'KI',
                 'deskripsi' => 'Jurusan yang fokus pada kimia industri.',
+                'created_at' => now(),
             ]
         ]);
     }

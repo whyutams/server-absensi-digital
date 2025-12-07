@@ -24,6 +24,7 @@ return new class extends Migration
             $table->integer('jurusan_id')->unsigned()->foreign()->references('id')->on('jurusans')->onDelete('set null')->nullable();
             $table->string('username')->unique();
             $table->string('password');
+            $table->boolean('permintaan_password')->default(true);
             $table->rememberToken();
             $table->timestamps();
         });
