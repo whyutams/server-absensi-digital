@@ -46,7 +46,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('/jurusan', JurusanController::class)->names('jurusan');
         Route::apiResource('/users', UserController::class)->names('users');
         Route::apiResource('/kelas', KelasController::class)->parameters(['kelas' => 'kelas'])->names('kelas');
-        Route::get('/list/kelas', [KelasController::class, 'list_aturan_kelas'])->name('kelas.list');
         Route::post('/kelas/list/generate', [KelasController::class, 'generate_list_aturan_kelas'])->name('kelas.list.generate');
     });
 
@@ -68,6 +67,7 @@ Route::middleware('auth:sanctum')->group(function () {
         User::ROLE_ORANGTUA,
     ])])->group(function () {
         Route::apiResource('/keterlambatan', KeterlambatanController::class)->only(['index', 'show'])->names('keterlambatan');
+        Route::get('/list/kelas', [KelasController::class, 'list_aturan_kelas'])->name('kelas.list');
     });
 
     Route::middleware(['role:' . User::ROLE_GURU_PIKET . ',' . User::ROLE_KESISWAAN . ',' . User::ROLE_BK])->group(function () {
