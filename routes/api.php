@@ -95,5 +95,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/perizinan/status/{perizinan}', [PerizinanController::class, 'status'])->name('perizinan.status');
     });
 
-    Route::post('/perizinan/export/excel', [PerizinanController::class, 'export_excel'])->name('perizinan.export.excel');
+    Route::get('/perizinan/export/excel', [PerizinanController::class, 'export_excel'])->name('perizinan.export.excel');
+    Route::get('/keterlambatan/export/excel', [KeterlambatanController::class, 'export_excel'])->name('keterlambatan.export.excel');
+    Route::get('/kelas/export/excel', [KelasController::class, 'export_excel'])->name('kelas.export.excel');
+    Route::get('/jurusan/export/excel', [JurusanController::class, 'export_excel'])->name('jurusan.export.excel');
+
 });
