@@ -38,7 +38,7 @@ class SiswaController extends Controller
             'nama' => 'nullable|string',
             'nomor_hp' => 'nullable|string',
             'jurusan_id' => 'nullable|exists:jurusans,id',
-            'kelas_id' => 'nullable|exists:kelas,id',
+            'kelas' => 'nullable',
             'orangtua_id' => 'nullable|exists:users,id',
         ]);
 
@@ -81,7 +81,7 @@ class SiswaController extends Controller
             'nama' => 'nullable|string',
             'nomor_hp' => 'nullable|string',
             'jurusan_id' => 'nullable|exists:jurusans,id',
-            'kelas_id' => 'nullable|exists:kelas,id',
+            'kelas' => 'nullable',
             'orangtua_id' => 'nullable|exists:users,id',
         ]);
 
