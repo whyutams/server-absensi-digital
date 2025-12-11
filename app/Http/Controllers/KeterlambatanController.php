@@ -106,4 +106,32 @@ class KeterlambatanController extends Controller
             'message' => 'Data berhasil dihapus.',
         ]);
     }
+
+
+    
+
+    public function export_excel(Request $request)
+    {
+        $request->validate([
+            'date_from' => 'nullable|date',
+            'date_to' => 'nullable|date|after_or_equal:date_from',
+        ]);
+
+        $query = Keterlambatan::query();
+
+        if ($request->filled('date_from')) {
+            $query->whereDate('created_at', '>=', $request->date_from);
+        }
+
+        if ($request->filled('date_to')) {
+            $query->whereDate('created_at', '<=', $request->date_to);
+        }
+
+        $keterlambatans = $query->with(['siswa', 'created_by'])->get();
+
+        return \Maatwebsite\Excel\Facades\Excel::download(
+            new \App\Exports\KeterlambatanExport($keterlambatans),
+            'Keterlambatan_' . now()->format('Y-m-d_H-i-s') . '.xlsx'
+        );
+    }
 }
