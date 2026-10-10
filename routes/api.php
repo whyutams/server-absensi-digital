@@ -70,7 +70,13 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/list/kelas', [KelasController::class, 'list_aturan_kelas'])->name('kelas.list');
     });
 
-    Route::middleware(['role:' . User::ROLE_GURU_PIKET . ',' . User::ROLE_KESISWAAN . ',' . User::ROLE_BK])->group(function () {
+    Route::middleware(['role:' . implode(',', [
+        User::ROLE_SUPERADMIN,
+        User::ROLE_KEPSEK,
+        User::ROLE_GURU_PIKET,
+        User::ROLE_KESISWAAN,
+        User::ROLE_BK,
+    ])])->group(function () {
         Route::apiResource('/keterlambatan', KeterlambatanController::class)->only(['store', 'destroy'])->names('keterlambatan');
     });
 
@@ -87,7 +93,14 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('/perizinan', PerizinanController::class)->only(['index', 'show'])->names('perizinan');
     });
 
-    Route::middleware(['role:' . User::ROLE_GURU_PIKET . ',' . User::ROLE_KESISWAAN . ',' . User::ROLE_BK . ',' . User::ROLE_GURU])->group(function () {
+    Route::middleware(['role:' . implode(',', [
+        User::ROLE_SUPERADMIN,
+        User::ROLE_KEPSEK,
+        User::ROLE_GURU_PIKET,
+        User::ROLE_KESISWAAN,
+        User::ROLE_BK,
+        User::ROLE_GURU,
+    ])])->group(function () {
         Route::apiResource('/perizinan', PerizinanController::class)->only(['store', 'destroy'])->names('perizinan');
     });
 
