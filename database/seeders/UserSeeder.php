@@ -16,21 +16,21 @@ class UserSeeder extends Seeder
     {
         DB::table('users')->insert([
             [
-                'nama' => 'ADMIN SMKN 1 KOTA GORONGTALO',
+                'nama' => 'ADMIN SMKN 1 KOTA GORONTALO',
                 'role' => User::ROLE_SUPERADMIN,
                 'username' => 'adminsmea',
                 'password' => bcrypt('password!.'),
                 'created_at' => now(),
             ],
             [
-                'nama' => 'PIKET SMKN 1 KOTA GORONGTALO',
+                'nama' => 'PIKET SMKN 1 KOTA GORONTALO',
                 'role' => User::ROLE_GURU_PIKET,
                 'username' => 'piketsmea',
                 'password' => bcrypt('password!.'),
                 'created_at' => now(),
             ],
             [
-                'nama' => 'KESISWAAN SMKN 1 KOTA GORONGTALO',
+                'nama' => 'KESISWAAN SMKN 1 KOTA GORONTALO',
                 'role' => User::ROLE_KESISWAAN,
                 'username' => 'kesiswaansmea',
                 'password' => bcrypt('password!.'),
@@ -93,14 +93,14 @@ class UserSeeder extends Seeder
                 'created_at' => now(),
             ],
             [
-                'nama' => 'SATPAM SMKN 1 KOTA GORONGTALO',
+                'nama' => 'SATPAM SMKN 1 KOTA GORONTALO',
                 'role' => User::ROLE_SATPAM,
                 'username' => 'satpamsmea',
                 'password' => bcrypt('password!.'),
                 'created_at' => now(),
             ],
             [
-                'nama' => 'BK SMKN 1 KOTA GORONGTALO',
+                'nama' => 'BK SMKN 1 KOTA GORONTALO',
                 'role' => User::ROLE_BK,
                 'username' => 'bksmea',
                 'password' => bcrypt('password!.'),
