@@ -49,7 +49,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/kelas/list/generate', [KelasController::class, 'generate_list_aturan_kelas'])->name('kelas.list.generate');
     });
 
-    Route::middleware(['role:' . User::ROLE_GURU . ',' . User::ROLE_GURU_PIKET . ',' . User::ROLE_KESISWAAN . ',' . User::ROLE_BK . User::ROLE_SUPERADMIN . ',' . User::ROLE_KEPSEK])->group(function () {
+    Route::middleware(['role:' . User::ROLE_GURU . ',' . User::ROLE_GURU_PIKET . ',' . User::ROLE_KESISWAAN . ',' . User::ROLE_BK . ',' . User::ROLE_SUPERADMIN . ',' . User::ROLE_KEPSEK])->group(function () {
         Route::apiResource('/siswa', SiswaController::class)->only(['index', 'show'])->names('siswa');
     });
 
