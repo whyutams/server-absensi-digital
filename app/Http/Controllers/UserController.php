@@ -103,7 +103,7 @@ class UserController extends Controller
             "alamat" => "nullable|string",
             "foto_profil" => "nullable|image|mimes:jpg,jpeg,png",
             "role" => "nullable|in:" . User::ROLE_SUPERADMIN . "," . User::ROLE_GURU_PIKET . "," . User::ROLE_GURU . "," . User::ROLE_KESISWAAN . "," . User::ROLE_KEPSEK,
-            "username" => "nullable|string|unique:users,username," . $user->username,
+            "username" => "nullable|string|unique:users,username," . $user->id,
             "password" => "nullable|string|min:6",
         ]);
 
