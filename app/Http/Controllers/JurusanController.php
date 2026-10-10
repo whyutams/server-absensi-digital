@@ -94,11 +94,18 @@ class JurusanController extends Controller
      */
     public function destroy(Jurusan $jurusan)
     {
-        $jurusan->delete();
+        try {
+            $jurusan->delete();
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Data berhasil dihapus.'
-        ]);
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Data berhasil dihapus.'
+            ]);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Data jurusan tidak dapat dihapus karena masih terkait dengan data lain.'
+            ], 422);
+        }
     }
 }

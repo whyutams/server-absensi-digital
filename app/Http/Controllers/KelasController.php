@@ -97,12 +97,19 @@ class KelasController extends Controller
      */
     public function destroy(Kelas $kelas)
     {
-        $kelas->delete();
+        try {
+            $kelas->delete();
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Data berhasil dihapus.'
-        ]);
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Data berhasil dihapus.'
+            ]);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Data kelas tidak dapat dihapus karena masih terkait dengan data lain.'
+            ], 422);
+        }
     }
 
     public function generate_list_aturan_kelas()
