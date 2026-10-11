@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Siswa;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 class SiswaController extends Controller
@@ -10,13 +12,50 @@ class SiswaController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $siswa = Siswa::all();
+        $user = Auth::user();
+        $query = Siswa::with(['jurusan', 'orangtua']);
+
+        if ($user && $user->role === User::ROLE_GURU) {
+            $query->where('jurusan_id', $user->jurusan_id);
+        }
+
+        if ($request->filled('search')) {
+            $search = trim($request->query('search'));
+            $query->where(function ($q) use ($search) {
+                $q->where('nama', 'like', "%{$search}%")
+                  ->orWhere('nis', 'like', "%{$search}%")
+                  ->orWhere('kelas', 'like', "%{$search}%")
+                  ->orWhereHas('orangtua', function ($oq) use ($search) {
+                      $oq->where('nama', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        $query->latest();
+
+        $perPage = $request->query('per_page', 15);
+        if ($perPage === 'all') {
+            $data = $query->get();
+            return response()->json([
+                'status' => 'success',
+                'data' => $data,
+                'total' => $data->count(),
+            ]);
+        }
+
+        $perPage = max(1, (int)$perPage);
+        $paginated = $query->paginate($perPage);
 
         return response()->json([
             'status' => 'success',
-            'data' => $siswa,
+            'data' => $paginated->items(),
+            'current_page' => $paginated->currentPage(),
+            'last_page' => $paginated->lastPage(),
+            'per_page' => $paginated->perPage(),
+            'total' => $paginated->total(),
+            'has_more' => $paginated->hasMorePages(),
         ]);
     }
 

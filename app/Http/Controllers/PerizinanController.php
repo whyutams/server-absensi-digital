@@ -14,13 +14,59 @@ class PerizinanController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $perizinan = Perizinan::all();
+        $user = Auth::user();
+        $query = Perizinan::with(['created_by', 'siswa.jurusan', 'siswa.orangtua']);
+
+        if ($user) {
+            if ($user->role === User::ROLE_GURU) {
+                $query->whereHas('siswa', function ($q) use ($user) {
+                    $q->where('jurusan_id', $user->jurusan_id);
+                });
+            } elseif ($user->role === User::ROLE_ORANGTUA) {
+                $query->whereHas('siswa', function ($q) use ($user) {
+                    $q->where('orangtua_id', $user->id);
+                });
+            }
+        }
+
+        if ($request->filled('search')) {
+            $search = trim($request->query('search'));
+            $query->where(function ($q) use ($search) {
+                $q->where('keterangan', 'like', "%{$search}%")
+                  ->orWhere('status', 'like', "%{$search}%")
+                  ->orWhere('date', 'like', "%{$search}%")
+                  ->orWhereHas('siswa', function ($sq) use ($search) {
+                      $sq->where('nama', 'like', "%{$search}%")
+                         ->orWhere('nis', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        $query->latest();
+
+        $perPage = $request->query('per_page', 15);
+        if ($perPage === 'all') {
+            $data = $query->get();
+            return response()->json([
+                'status' => 'success',
+                'data' => $data,
+                'total' => $data->count(),
+            ]);
+        }
+
+        $perPage = max(1, (int)$perPage);
+        $paginated = $query->paginate($perPage);
 
         return response()->json([
             'status' => 'success',
-            'data' => $perizinan,
+            'data' => $paginated->items(),
+            'current_page' => $paginated->currentPage(),
+            'last_page' => $paginated->lastPage(),
+            'per_page' => $paginated->perPage(),
+            'total' => $paginated->total(),
+            'has_more' => $paginated->hasMorePages(),
         ]);
     }
 

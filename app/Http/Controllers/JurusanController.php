@@ -10,13 +10,42 @@ class JurusanController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $jurusan = Jurusan::all();
+        $query = Jurusan::query();
+
+        if ($request->filled('search')) {
+            $search = trim($request->query('search'));
+            $query->where(function ($q) use ($search) {
+                $q->where('nama', 'like', "%{$search}%")
+                  ->orWhere('alias', 'like', "%{$search}%")
+                  ->orWhere('deskripsi', 'like', "%{$search}%");
+            });
+        }
+
+        $query->latest();
+
+        $perPage = $request->query('per_page', 15);
+        if ($perPage === 'all') {
+            $data = $query->get();
+            return response()->json([
+                'status' => 'success',
+                'data' => $data,
+                'total' => $data->count(),
+            ]);
+        }
+
+        $perPage = max(1, (int)$perPage);
+        $paginated = $query->paginate($perPage);
 
         return response()->json([
             'status' => 'success',
-            'data' => $jurusan,
+            'data' => $paginated->items(),
+            'current_page' => $paginated->currentPage(),
+            'last_page' => $paginated->lastPage(),
+            'per_page' => $paginated->perPage(),
+            'total' => $paginated->total(),
+            'has_more' => $paginated->hasMorePages(),
         ]);
     }
 

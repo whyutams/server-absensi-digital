@@ -11,13 +11,49 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::all();
+        $query = User::with('jurusan');
+
+        if ($request->filled('role')) {
+            $query->where('role', $request->query('role'));
+        } else {
+            $query->whereNotIn('role', [User::ROLE_SUPERADMIN, User::ROLE_KEPSEK]);
+        }
+
+        if ($request->filled('search')) {
+            $search = trim($request->query('search'));
+            $query->where(function ($q) use ($search) {
+                $q->where('nama', 'like', "%{$search}%")
+                  ->orWhere('nip', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%")
+                  ->orWhere('nomor_hp', 'like', "%{$search}%");
+            });
+        }
+
+        $query->latest();
+
+        $perPage = $request->query('per_page', 15);
+        if ($perPage === 'all') {
+            $data = $query->get();
+            return response()->json([
+                'status' => 'success',
+                'data' => $data,
+                'total' => $data->count(),
+            ]);
+        }
+
+        $perPage = max(1, (int)$perPage);
+        $paginated = $query->paginate($perPage);
 
         return response()->json([
             'status' => 'success',
-            'data' => $users,
+            'data' => $paginated->items(),
+            'current_page' => $paginated->currentPage(),
+            'last_page' => $paginated->lastPage(),
+            'per_page' => $paginated->perPage(),
+            'total' => $paginated->total(),
+            'has_more' => $paginated->hasMorePages(),
         ]);
     }
 
