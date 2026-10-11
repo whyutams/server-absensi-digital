@@ -163,6 +163,13 @@ class PerizinanController extends Controller
      */
     public function update(Request $request, Perizinan $perizinan)
     {
+        if ($perizinan->status !== Perizinan::STATUS_PENDING) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Data perizinan hanya dapat diedit jika status masih menunggu persetujuan.',
+            ], 422);
+        }
+
         $validated = $request->validate([
             "siswa_id" => "required|exists:siswas,id",
             "keterangan" => "required|string",
