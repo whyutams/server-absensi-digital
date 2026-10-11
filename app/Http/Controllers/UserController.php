@@ -13,7 +13,7 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $query = User::with('jurusan');
+        $query = User::with(['jurusan', 'created_by', 'siswa']);
 
         if ($request->filled('role')) {
             $query->where('role', $request->query('role'));
@@ -31,7 +31,7 @@ class UserController extends Controller
             });
         }
 
-        $query->latest();
+        $query->orderBy('created_at', 'desc')->orderBy('id', 'desc');
 
         $perPage = $request->query('per_page', 15);
         if ($perPage === 'all') {
@@ -97,6 +97,10 @@ class UserController extends Controller
             $validated['foto_profil'] = 'storage/uploads/foto_profil/' . $filename;
         }
 
+        if (Auth::check()) {
+            $validated['created_by'] = Auth::id();
+        }
+
         User::create($validated);
 
         return response()->json([
@@ -110,7 +114,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        $data = User::with('jurusan')->where('id', $user->id)->first();
+        $data = User::with(['jurusan', 'created_by', 'siswa'])->where('id', $user->id)->first();
 
         return response()->json([
             'status' => 'success',

@@ -17,7 +17,7 @@ class KeterlambatanController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-        $query = Keterlambatan::with(['created_by', 'siswa.jurusan', 'siswa.orangtua']);
+        $query = Keterlambatan::with(['created_by', 'updated_by', 'siswa.jurusan', 'siswa.orangtua']);
 
         if ($user) {
             if ($user->role === User::ROLE_GURU) {
@@ -43,7 +43,7 @@ class KeterlambatanController extends Controller
             });
         }
 
-        $query->latest();
+        $query->orderBy('created_at', 'desc')->orderBy('id', 'desc');
 
         $perPage = $request->query('per_page', 15);
         if ($perPage === 'all') {
@@ -135,7 +135,7 @@ class KeterlambatanController extends Controller
      */
     public function show(Keterlambatan $keterlambatan)
     {
-        $data = Keterlambatan::with(['created_by', 'siswa.jurusan', 'siswa.orangtua'])->where('id', $keterlambatan->id)->first();
+        $data = Keterlambatan::with(['created_by', 'updated_by', 'siswa.jurusan', 'siswa.orangtua'])->where('id', $keterlambatan->id)->first();
 
         return response()->json([
             'status' => 'success',
@@ -156,7 +156,34 @@ class KeterlambatanController extends Controller
      */
     public function update(Request $request, Keterlambatan $keterlambatan)
     {
-        //
+        $validated = $request->validate([
+            "siswa_id" => "required|exists:siswas,id",
+            "keterangan" => "required|string",
+            "date" => "required",
+            "gambar" => "nullable|image|mimes:jpeg,png,jpg",
+        ]);
+
+        if ($request->hasFile('gambar')) {
+            if ($keterlambatan->gambar && file_exists(public_path($keterlambatan->gambar))) {
+                unlink(public_path($keterlambatan->gambar));
+            }
+            $file = $request->file('gambar');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('storage/uploads/keterlambatan/'), $filename);
+            $validated['gambar'] = 'storage/uploads/keterlambatan/' . $filename;
+        }
+
+        if (Auth::check()) {
+            $validated['updated_by'] = Auth::id();
+        }
+
+        $keterlambatan->update($validated);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Data berhasil diperbarui.',
+            'data' => $keterlambatan->load(['created_by', 'updated_by', 'siswa.jurusan', 'siswa.orangtua']),
+        ]);
     }
 
     /**

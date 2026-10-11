@@ -64,6 +64,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::middleware(['role:' . User::ROLE_GURU_PIKET . ',' . User::ROLE_KESISWAAN . ',' . User::ROLE_BK  . ',' . User::ROLE_SUPERADMIN . ',' . User::ROLE_KEPSEK])->group(function () {
         Route::apiResource('/siswa', SiswaController::class)->only(['store', 'update', 'destroy'])->names('siswa');
+        Route::match(['put', 'post'], '/siswa/{siswa}', [SiswaController::class, 'update'])->name('siswa.update.post');
     });
 
     Route::middleware(['role:' . implode(',', [
@@ -86,7 +87,8 @@ Route::middleware('auth:sanctum')->group(function () {
         User::ROLE_KESISWAAN,
         User::ROLE_BK,
     ])])->group(function () {
-        Route::apiResource('/keterlambatan', KeterlambatanController::class)->only(['store', 'destroy'])->names('keterlambatan');
+        Route::apiResource('/keterlambatan', KeterlambatanController::class)->only(['store', 'update', 'destroy'])->names('keterlambatan');
+        Route::match(['put', 'post'], '/keterlambatan/{keterlambatan}', [KeterlambatanController::class, 'update'])->name('keterlambatan.update.post');
     });
 
     Route::middleware(['role:' . implode(',', [
@@ -110,11 +112,18 @@ Route::middleware('auth:sanctum')->group(function () {
         User::ROLE_BK,
         User::ROLE_GURU,
     ])])->group(function () {
-        Route::apiResource('/perizinan', PerizinanController::class)->only(['store', 'destroy'])->names('perizinan');
+        Route::apiResource('/perizinan', PerizinanController::class)->only(['store', 'update', 'destroy'])->names('perizinan');
+        Route::match(['put', 'post'], '/perizinan/{perizinan}', [PerizinanController::class, 'update'])->name('perizinan.update.post');
     });
 
-    Route::middleware(['role:' . User::ROLE_GURU_PIKET . ',' . User::ROLE_KESISWAAN . ',' . User::ROLE_BK])->group(function () {
-        Route::put('/perizinan/status/{perizinan}', [PerizinanController::class, 'status'])->name('perizinan.status');
+    Route::middleware(['role:' . implode(',', [
+        User::ROLE_SUPERADMIN,
+        User::ROLE_KEPSEK,
+        User::ROLE_GURU_PIKET,
+        User::ROLE_KESISWAAN,
+        User::ROLE_BK,
+    ])])->group(function () {
+        Route::match(['put', 'post'], '/perizinan/status/{perizinan}', [PerizinanController::class, 'status'])->name('perizinan.status');
     });
 
     

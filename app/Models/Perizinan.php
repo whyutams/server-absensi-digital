@@ -13,11 +13,17 @@ class Perizinan extends Model
         'siswa_id',
         'date',
         'created_by',
+        'updated_by',
     ];
 
     public function created_by()
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function updated_by()
+    {
+        return $this->belongsTo(User::class, 'updated_by');
     }
 
     public function siswa()

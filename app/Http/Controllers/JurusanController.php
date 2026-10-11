@@ -12,7 +12,7 @@ class JurusanController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Jurusan::query();
+        $query = Jurusan::with(['created_by', 'updated_by']);
 
         if ($request->filled('search')) {
             $search = trim($request->query('search'));
@@ -23,7 +23,7 @@ class JurusanController extends Controller
             });
         }
 
-        $query->latest();
+        $query->orderBy('created_at', 'desc')->orderBy('id', 'desc');
 
         $perPage = $request->query('per_page', 15);
         if ($perPage === 'all') {
@@ -68,6 +68,10 @@ class JurusanController extends Controller
             'deskripsi' => 'nullable|string',
         ]);
 
+        if (Auth::check()) {
+            $validated['created_by'] = Auth::id();
+        }
+
         Jurusan::create($validated);
 
         return response()->json([
@@ -83,7 +87,7 @@ class JurusanController extends Controller
     {
         return response()->json([
             'status' => 'success',
-            'data' => $jurusan,
+            'data' => $jurusan->load(['created_by', 'updated_by']),
         ]);
     }
 
@@ -106,15 +110,22 @@ class JurusanController extends Controller
             'deskripsi' => 'nullable|string',
         ]);
 
-        $jurusan->update([
+        $updateData = [
             'nama' => $request['nama'] ?? $jurusan->nama,
             'alias' => $request['alias'] ?? $jurusan->alias,
             'deskripsi' => $request['deskripsi'] ?? $jurusan->deskripsi,
-        ]);
+        ];
+
+        if (Auth::check()) {
+            $updateData['updated_by'] = Auth::id();
+        }
+
+        $jurusan->update($updateData);
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Data berhasil diperbarui.'
+            'message' => 'Data berhasil diperbarui.',
+            'data' => $jurusan->load(['created_by', 'updated_by']),
         ]);
     }
 

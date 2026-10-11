@@ -15,7 +15,7 @@ class SiswaController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-        $query = Siswa::with(['jurusan', 'orangtua']);
+        $query = Siswa::with(['jurusan', 'orangtua', 'created_by', 'updated_by']);
 
         if ($user && $user->role === User::ROLE_GURU) {
             $query->where('jurusan_id', $user->jurusan_id);
@@ -33,7 +33,7 @@ class SiswaController extends Controller
             });
         }
 
-        $query->latest();
+        $query->orderBy('created_at', 'desc')->orderBy('id', 'desc');
 
         $perPage = $request->query('per_page', 15);
         if ($perPage === 'all') {
@@ -81,6 +81,10 @@ class SiswaController extends Controller
             'orangtua_id' => 'nullable|exists:users,id',
         ]);
 
+        if (Auth::check()) {
+            $validated['created_by'] = Auth::id();
+        }
+
         Siswa::create($validated);
 
         return response()->json([
@@ -94,7 +98,7 @@ class SiswaController extends Controller
      */
     public function show(Siswa $siswa)
     {
-        $data = Siswa::with(['jurusan', 'orangtua'])->where('id', $siswa->id)->first();
+        $data = Siswa::with(['jurusan', 'orangtua', 'created_by', 'updated_by'])->where('id', $siswa->id)->first();
 
         return response()->json([
             'status' => 'success',
@@ -124,18 +128,25 @@ class SiswaController extends Controller
             'orangtua_id' => 'nullable|exists:users,id',
         ]);
 
-        $siswa->update([
-            'nis' => $request['nis'] ?? $siswa->nis,
-            'nama' => $request['nama'] ?? $siswa->nama,
-            'nomor_hp' => $request['nomor_hp'] ?? $siswa->nomor_hp,
-            'jurusan_id' => $request['jurusan_id'] ?? $siswa->jurusan_id,
-            'kelas_id' => $request['kelas_id'] ?? $siswa->kelas_id,
-            'orangtua_id' => $request['orangtua_id'] ?? $siswa->orangtua_id,
-        ]);
+        $updateData = [];
+        if ($request->has('nis')) $updateData['nis'] = $request->input('nis');
+        if ($request->has('nama')) $updateData['nama'] = $request->input('nama');
+        if ($request->has('nomor_hp')) $updateData['nomor_hp'] = $request->input('nomor_hp');
+        if ($request->has('jurusan_id')) $updateData['jurusan_id'] = $request->input('jurusan_id');
+        if ($request->has('kelas')) $updateData['kelas'] = $request->input('kelas');
+        if ($request->has('orangtua_id')) $updateData['orangtua_id'] = $request->input('orangtua_id');
+        elseif ($request->has('user_id')) $updateData['orangtua_id'] = $request->input('user_id');
+
+        if (Auth::check()) {
+            $updateData['updated_by'] = Auth::id();
+        }
+
+        $siswa->update($updateData);
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Data berhasil diupdate.'
+            'message' => 'Data berhasil diupdate.',
+            'data' => $siswa->load(['jurusan', 'orangtua', 'created_by', 'updated_by']),
         ]);
     }
 

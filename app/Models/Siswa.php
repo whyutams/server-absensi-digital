@@ -13,6 +13,8 @@ class Siswa extends Model
         'jurusan_id',
         'kelas',
         'orangtua_id',
+        'created_by',
+        'updated_by',
     ];
 
     public function orangtua()
@@ -23,5 +25,15 @@ class Siswa extends Model
     public function jurusan()
     {
         return $this->belongsTo(Jurusan::class, 'jurusan_id');
+    }
+
+    public function created_by()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function updated_by()
+    {
+        return $this->belongsTo(User::class, 'updated_by');
     }
 }

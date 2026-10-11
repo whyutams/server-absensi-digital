@@ -13,7 +13,7 @@ class KelasController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Kelas::with('jurusan');
+        $query = Kelas::with(['jurusan', 'created_by', 'updated_by']);
 
         if ($request->filled('search')) {
             $search = trim($request->query('search'));
@@ -26,7 +26,7 @@ class KelasController extends Controller
             });
         }
 
-        $query->latest();
+        $query->orderBy('created_at', 'desc')->orderBy('id', 'desc');
 
         $perPage = $request->query('per_page', 15);
         if ($perPage === 'all') {
@@ -71,6 +71,10 @@ class KelasController extends Controller
             'jurusan_id' => 'required|exists:jurusans,id',
         ]);
 
+        if (Auth::check()) {
+            $validated['created_by'] = Auth::id();
+        }
+
         Kelas::create($validated);
 
         return response()->json([
@@ -84,7 +88,7 @@ class KelasController extends Controller
      */
     public function show(Kelas $kelas)
     {
-        $data = Kelas::with('jurusan')->where('id', $kelas->id)->first();
+        $data = Kelas::with(['jurusan', 'created_by', 'updated_by'])->where('id', $kelas->id)->first();
 
         return response()->json([
             'status' => 'success',
@@ -111,15 +115,22 @@ class KelasController extends Controller
             'jurusan_id' => 'nullable|exists:jurusans,id',
         ]);
 
-        $kelas->update([
+        $updateData = [
             'kelas' => $request['kelas'] ?? $kelas->kelas,
             'jumlah_kelas' => $request['jumlah_kelas'] ?? $kelas->jumlah_kelas,
             'jurusan_id' => $request['jurusan_id'] ?? $kelas->jurusan_id
-        ]);
+        ];
+
+        if (Auth::check()) {
+            $updateData['updated_by'] = Auth::id();
+        }
+
+        $kelas->update($updateData);
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Data berhasil diperbarui.'
+            'message' => 'Data berhasil diperbarui.',
+            'data' => $kelas->load(['jurusan', 'created_by', 'updated_by']),
         ]);
     }
 

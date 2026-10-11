@@ -19,12 +19,15 @@ class RoleMiddleware
             ], 401);
         }
 
-        if (! in_array($user->role, $roles)) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Unauthorized. Role ' . $user->role . ' tidak memiliki akses ke resource ini.'
-            ], 403);
+        // Superadmin memiliki hak akses penuh ke seluruh resource
+        if ($user->role === \App\Models\User::ROLE_SUPERADMIN || in_array($user->role, $roles)) {
+            return $next($request);
         }
+
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Unauthorized. Role ' . $user->role . ' tidak memiliki akses ke resource ini.'
+        ], 403);
 
         return $next($request);
     }

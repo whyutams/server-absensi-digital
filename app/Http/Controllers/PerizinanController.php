@@ -17,7 +17,7 @@ class PerizinanController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-        $query = Perizinan::with(['created_by', 'siswa.jurusan', 'siswa.orangtua']);
+        $query = Perizinan::with(['created_by', 'updated_by', 'siswa.jurusan', 'siswa.orangtua']);
 
         if ($user) {
             if ($user->role === User::ROLE_GURU) {
@@ -44,7 +44,7 @@ class PerizinanController extends Controller
             });
         }
 
-        $query->latest();
+        $query->orderBy('created_at', 'desc')->orderBy('id', 'desc');
 
         $perPage = $request->query('per_page', 15);
         if ($perPage === 'all') {
@@ -142,7 +142,7 @@ class PerizinanController extends Controller
      */
     public function show(Perizinan $perizinan)
     {
-        $data = Perizinan::with(['created_by', 'siswa.jurusan', 'siswa.orangtua'])->where('id', $perizinan->id)->first();
+        $data = Perizinan::with(['created_by', 'updated_by', 'siswa.jurusan', 'siswa.orangtua'])->where('id', $perizinan->id)->first();
 
         return response()->json([
             'status' => 'success',
@@ -163,7 +163,34 @@ class PerizinanController extends Controller
      */
     public function update(Request $request, Perizinan $perizinan)
     {
-        //
+        $validated = $request->validate([
+            "siswa_id" => "required|exists:siswas,id",
+            "keterangan" => "required|string",
+            "date" => "required",
+            "gambar" => "nullable|image|mimes:jpeg,png,jpg",
+        ]);
+
+        if ($request->hasFile('gambar')) {
+            if ($perizinan->gambar && file_exists(public_path($perizinan->gambar))) {
+                unlink(public_path($perizinan->gambar));
+            }
+            $file = $request->file('gambar');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('storage/uploads/perizinan/'), $filename);
+            $validated['gambar'] = 'storage/uploads/perizinan/' . $filename;
+        }
+
+        if (Auth::check()) {
+            $validated['updated_by'] = Auth::id();
+        }
+
+        $perizinan->update($validated);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Data berhasil diperbarui.',
+            'data' => $perizinan->load(['created_by', 'updated_by', 'siswa.jurusan', 'siswa.orangtua']),
+        ]);
     }
 
     /**
@@ -196,9 +223,15 @@ class PerizinanController extends Controller
             ], 400);
         };
 
-        $perizinan->update([
+        $updateData = [
             "status" => $validated['status'],
-        ]);
+        ];
+
+        if (Auth::check()) {
+            $updateData['updated_by'] = Auth::id();
+        }
+
+        $perizinan->update($updateData);
 
         // Kirim notifikasi HANYA ke Orang Tua Siswa
         try {

@@ -30,6 +30,7 @@ class User extends Authenticatable
         'jurusan_id',
         'username',
         'password',
+        'created_by',
     ];
 
     /**
@@ -58,6 +59,16 @@ class User extends Authenticatable
     public function jurusan()
     {
         return $this->belongsTo(Jurusan::class, 'jurusan_id');
+    }
+
+    public function created_by()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function siswa()
+    {
+        return $this->hasMany(Siswa::class, 'orangtua_id');
     }
 
     public function deviceTokens()
