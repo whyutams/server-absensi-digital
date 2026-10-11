@@ -1,17 +1,79 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Server Absensi Digital
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Backend Server Absensi Digital untuk Aplikasi Sistem Monitoring Siswa (SISMON) sebagai REST API yang dibuat menggunakan Framework Laravel 11
 
-## Installation
-- git clone https://github.com/whyutams/server-absensi-digital.git
-- composer install
-- copy file .env.example & rename to .env
-- php artisan key:generate
-- php artisan migrate
-- php artisan storage:link
-- php artisan serve 
+## Teknologi
+- **Framework**: Laravel 11
+- **Bahasa**: PHP >= 8.2
+- **Database**: MySQL / MariaDB
+
+---
+
+## Panduan Instalasi
+
+### Prasyarat
+- PHP >= 8.2
+- Composer
+- MySQL / MariaDB (Laragon / XAMPP)
+
+### Langkah Instalasi
+1. **Clone Repository**
+   ```bash
+   git clone https://github.com/whyutams/server-absensi-digital.git
+   cd server-absensi-digital
+   ```
+
+2. **Install Dependensi Composer**
+   ```bash
+   composer install
+   ```
+
+3. **Konfigurasi Environment**
+   Salin file `.env.example` menjadi `.env`:
+   ```bash
+   cp .env.example .env
+   ```
+   *Pada Windows (PowerShell / Command Prompt):*
+   ```powershell
+   copy .env.example .env
+   ```
+   Buka file `.env` dan sesuaikan konfigurasi database:
+   ```env
+   DB_CONNECTION=mysql
+   DB_HOST=127.0.0.1
+   DB_PORT=3306
+   DB_DATABASE=server_absensi_digital
+   DB_USERNAME=root
+   DB_PASSWORD=
+   ```
+
+4. **Generate Application Key**
+   ```bash
+   php artisan key:generate
+   ```
+
+5. **Migrasi dan Seeder Database**
+   Pastikan database telah dibuat di MySQL, lalu jalankan:
+   ```bash
+   php artisan migrate --seed
+   ```
+
+6. **Buat Storage Link**
+   ```bash
+   php artisan storage:link
+   ```
+
+7. **Cek IP Lokal**
+   dengan cara menjalankan perintah berikut:
+   ```bash
+   ipconfig
+   ```
+   kemudian copy IPv4 anda yang muncul.
+
+8. **Jalankan Server**
+   ```bash
+   php artisan serve --host <IPv4>
+   ```
+   Server backend akan berjalan di `http://IPv4:8000`.
+
+   PENTING: jika sudah membaca dokumentasi aplikasi SISMON, pastikan menggunakan IPv4 yang sama dengan server, dan konfigurasi di ApiClient. kemudian, jika menggunakan emulator external seperti handphone maka wajib terhubung ke jaringan local yang sama.
