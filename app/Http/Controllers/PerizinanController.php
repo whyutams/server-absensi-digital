@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Perizinan;
+use App\Models\Siswa;
+use App\Models\User;
+use App\Services\FirebaseNotificationService;
 use Auth;
 use Illuminate\Http\Request;
 
@@ -53,7 +56,34 @@ class PerizinanController extends Controller
             $validated['created_by'] = Auth::id();
         }
 
-        Perizinan::create($validated);
+        $perizinan = Perizinan::create($validated);
+
+        // Kirim notifikasi HANYA ke Petugas Piket
+        try {
+            $siswa = Siswa::find($validated['siswa_id']);
+            $namaSiswa = $siswa ? $siswa->nama : 'Siswa';
+            $piketUserIds = User::whereIn('role', [User::ROLE_GURU_PIKET])
+                ->orWhere('role', 'piket')
+                ->pluck('id')
+                ->toArray();
+
+            if (!empty($piketUserIds)) {
+                $fcmService = app(FirebaseNotificationService::class);
+                $title = 'Pengajuan Perizinan Baru';
+                $body = "Pengajuan izin baru untuk {$namaSiswa}. Silakan lakukan verifikasi.";
+                $fcmService->sendToUsers(
+                    $piketUserIds,
+                    $title,
+                    $body,
+                    [
+                        'type' => 'perizinan',
+                        'reference_id' => (string) $perizinan->id,
+                    ]
+                );
+            }
+        } catch (\Throwable $e) {
+            \Log::error('Gagal mengirim notifikasi perizinan ke piket: ' . $e->getMessage());
+        }
 
         return response()->json([
             'status' => 'success',
@@ -123,6 +153,29 @@ class PerizinanController extends Controller
         $perizinan->update([
             "status" => $validated['status'],
         ]);
+
+        // Kirim notifikasi HANYA ke Orang Tua Siswa
+        try {
+            $perizinan->loadMissing('siswa');
+            $siswa = $perizinan->siswa;
+            if ($siswa && $siswa->orangtua_id) {
+                $statusText = $validated['status'] === Perizinan::STATUS_APPROVED ? 'disetujui' : 'ditolak';
+                $fcmService = app(FirebaseNotificationService::class);
+                $title = 'Status Perizinan Siswa';
+                $body = "Pengajuan izin untuk {$siswa->nama} telah {$statusText}.";
+                $fcmService->sendToUser(
+                    (int) $siswa->orangtua_id,
+                    $title,
+                    $body,
+                    [
+                        'type' => 'perizinan',
+                        'reference_id' => (string) $perizinan->id,
+                    ]
+                );
+            }
+        } catch (\Throwable $e) {
+            \Log::error('Gagal mengirim notifikasi status perizinan ke orang tua: ' . $e->getMessage());
+        }
 
         return response()->json([
             'status' => 'success',

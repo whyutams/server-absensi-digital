@@ -60,6 +60,16 @@ class User extends Authenticatable
         return $this->belongsTo(Jurusan::class, 'jurusan_id');
     }
 
+    public function deviceTokens()
+    {
+        return $this->hasMany(UserDeviceToken::class, 'user_id');
+    }
+
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class, 'user_id');
+    }
+
     const ROLE_SUPERADMIN = 'superadmin';
     const ROLE_GURU_PIKET = 'guru_piket';
     const ROLE_GURU = 'guru';

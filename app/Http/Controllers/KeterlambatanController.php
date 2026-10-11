@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Keterlambatan;
+use App\Models\Siswa;
+use App\Services\FirebaseNotificationService;
 use Auth;
 use Illuminate\Http\Request;
 
@@ -53,7 +55,28 @@ class KeterlambatanController extends Controller
             $validated['created_by'] = Auth::id();
         }
 
-        Keterlambatan::create($validated);
+        $keterlambatan = Keterlambatan::create($validated);
+
+        // Kirim notifikasi HANYA ke orang tua siswa
+        try {
+            $siswa = Siswa::find($validated['siswa_id']);
+            if ($siswa && $siswa->orangtua_id) {
+                $fcmService = app(FirebaseNotificationService::class);
+                $title = 'Keterlambatan Siswa';
+                $body = "Siswa {$siswa->nama} tercatat terlambat pada {$keterlambatan->date}. Keterangan: {$keterlambatan->keterangan}";
+                $fcmService->sendToUser(
+                    (int) $siswa->orangtua_id,
+                    $title,
+                    $body,
+                    [
+                        'type' => 'keterlambatan',
+                        'reference_id' => (string) $keterlambatan->id,
+                    ]
+                );
+            }
+        } catch (\Throwable $e) {
+            \Log::error('Gagal mengirim notifikasi keterlambatan: ' . $e->getMessage());
+        }
 
         return response()->json([
             'status' => 'success',

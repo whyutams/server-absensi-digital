@@ -5,6 +5,7 @@ use App\Http\Controllers\GeneralController;
 use App\Http\Controllers\JurusanController;
 use App\Http\Controllers\KelasController;
 use App\Http\Controllers\KeterlambatanController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PerizinanController;
 use App\Http\Controllers\SiswaController;
 use App\Http\Controllers\UserController;
@@ -41,6 +42,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/profile/edit', [AuthController::class, 'update_profile']);
     Route::get('/info', [GeneralController::class, 'info']);
     Route::post('/reset-password', [AuthController::class, 'update_password']);
+
+    // Device Token & In-App Notification
+    Route::post('/device-token', [NotificationController::class, 'storeDeviceToken']);
+    Route::delete('/device-token', [NotificationController::class, 'deleteDeviceToken']);
+    Route::get('/notifications', [NotificationController::class, 'index']);
+    Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead']);
+    Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead']);
 
     Route::middleware(['role:' . User::ROLE_SUPERADMIN . ',' . User::ROLE_KEPSEK])->group(function () {
         Route::apiResource('/jurusan', JurusanController::class)->names('jurusan');
