@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AppUpdateController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GeneralController;
 use App\Http\Controllers\JurusanController;
@@ -123,3 +124,5 @@ Route::get('/perizinan/export/excel', [PerizinanController::class, 'export_excel
 Route::get('/keterlambatan/export/excel', [KeterlambatanController::class, 'export_excel'])->name('keterlambatan.export.excel');
 Route::get('/kelas/export/excel', [KelasController::class, 'export_excel'])->name('kelas.export.excel');
 Route::get('/jurusan/export/excel', [JurusanController::class, 'export_excel'])->name('jurusan.export.excel');
+Route::get('/app-update/check', [AppUpdateController::class, 'checkUpdate'])->name('app.update.check');
+Route::get('/app-update/download/{filename}', [AppUpdateController::class, 'downloadApk'])->name('app.update.download');
