@@ -19,7 +19,19 @@ class UserController extends Controller
         $query = User::with(['jurusan', 'created_by', 'siswa']);
 
         if ($request->filled('role')) {
-            $query->where('role', $request->query('role'));
+            $roleParam = $request->query('role');
+            if ($roleParam === 'guru') {
+                $query->whereIn('role', [
+                    User::ROLE_GURU,
+                    User::ROLE_KESISWAAN,
+                    User::ROLE_BK,
+                    User::ROLE_GURU_PIKET,
+                ]);
+            } else if (str_contains($roleParam, ',')) {
+                $query->whereIn('role', explode(',', $roleParam));
+            } else {
+                $query->where('role', $roleParam);
+            }
         } else {
             $query->whereNotIn('role', [User::ROLE_SUPERADMIN, User::ROLE_KEPSEK]);
         }
@@ -81,10 +93,12 @@ class UserController extends Controller
             "email" => "nullable|email|unique:users,email",
             "alamat" => "nullable|string",
             "foto_profil" => "nullable|image|mimes:jpg,jpeg,png",
-            "role" => "required|in:" . User::ROLE_SUPERADMIN . "," . User::ROLE_GURU_PIKET . "," . User::ROLE_GURU . "," . User::ROLE_KESISWAAN . "," . User::ROLE_KEPSEK . "," . User::ROLE_BK  . "," . User::ROLE_SATPAM . "," . User::ROLE_ORANGTUA,
+            "role" => "nullable|in:" . User::ROLE_SUPERADMIN . "," . User::ROLE_GURU_PIKET . "," . User::ROLE_GURU . "," . User::ROLE_KESISWAAN . "," . User::ROLE_KEPSEK . "," . User::ROLE_BK  . "," . User::ROLE_SATPAM . "," . User::ROLE_ORANGTUA,
             "username" => "required|string|unique:users,username",
             "password" => "required|string|min:6",
         ]);
+
+        $validated['role'] = $validated['role'] ?? User::ROLE_GURU;
 
         // mengubah username dan email menjadi huruf kecil semua
         $validated['username'] = strtolower($validated['username']);
@@ -145,7 +159,7 @@ class UserController extends Controller
             "email" => "nullable|email|unique:users,email," . $user->id,
             "alamat" => "nullable|string",
             "foto_profil" => "nullable|image|mimes:jpg,jpeg,png",
-            "role" => "nullable|in:" . User::ROLE_SUPERADMIN . "," . User::ROLE_GURU_PIKET . "," . User::ROLE_GURU . "," . User::ROLE_KESISWAAN . "," . User::ROLE_KEPSEK,
+            "role" => "nullable|in:" . User::ROLE_SUPERADMIN . "," . User::ROLE_GURU_PIKET . "," . User::ROLE_GURU . "," . User::ROLE_KESISWAAN . "," . User::ROLE_KEPSEK . "," . User::ROLE_BK  . "," . User::ROLE_SATPAM . "," . User::ROLE_ORANGTUA,
             "username" => "nullable|string|unique:users,username," . $user->id,
             "password" => "nullable|string|min:6",
         ]);
