@@ -79,14 +79,20 @@ class SiswaImport
                 $rowErrors[] = 'Nama siswa wajib diisi.';
             }
 
-            // 2. Validasi Jurusan
+            // 2. Validasi Jurusan (Utamakan cocok dengan alias, jika tidak cocok cari berdasarkan nama)
             $jurusanId = null;
             if (empty($jurusanStr)) {
                 $rowErrors[] = 'Jurusan wajib diisi.';
             } else {
                 $foundJurusan = $jurusans->first(function ($j) use ($jurusanStr) {
-                    return strcasecmp($j->nama, $jurusanStr) === 0 || (!empty($j->alias) && strcasecmp($j->alias, $jurusanStr) === 0);
+                    return !empty($j->alias) && strcasecmp(trim($j->alias), $jurusanStr) === 0;
                 });
+                if (!$foundJurusan) {
+                    $foundJurusan = $jurusans->first(function ($j) use ($jurusanStr) {
+                        return strcasecmp(trim($j->nama), $jurusanStr) === 0;
+                    });
+                }
+
                 if ($foundJurusan) {
                     $jurusanId = $foundJurusan->id;
                 } else {
@@ -145,6 +151,19 @@ class SiswaImport
                     'created_by' => Auth::id(),
                 ];
             }
+        }
+
+        if ($this->totalRows === 0) {
+            return [
+                'status' => 'error',
+                'message' => 'Berkas Excel tidak memiliki baris data.',
+                'summary' => [
+                    'total_rows' => 0,
+                    'valid_rows' => 0,
+                    'invalid_rows' => 0,
+                ],
+                'errors' => [],
+            ];
         }
 
         // Mode Commit: Simpan data valid ke database

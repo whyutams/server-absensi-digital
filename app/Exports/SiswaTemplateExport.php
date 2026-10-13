@@ -25,15 +25,25 @@ class SiswaTemplateExport implements WithMultipleSheets
 
     public function __construct()
     {
-        // 1. Ambil daftar nama jurusan
-        $this->jurusans = Jurusan::orderBy('nama', 'asc')->pluck('nama')->toArray();
+        // 1. Ambil daftar pilihan jurusan: utamakan alias jika ada, jika tidak ada alias gunakan nama jurusan
+        $this->jurusans = Jurusan::orderBy('nama', 'asc')
+            ->get()
+            ->map(function ($j) {
+                $alias = trim($j->alias ?? '');
+                return !empty($alias) ? $alias : trim($j->nama ?? '');
+            })
+            ->filter()
+            ->unique()
+            ->values()
+            ->toArray();
+        sort($this->jurusans, SORT_NATURAL | SORT_FLAG_CASE);
 
         // 2. Buat daftar nama rombel kelas sesuai aturan kelas di database
         $kelasList = [];
         $kelasRules = Kelas::with('jurusan')->get();
         foreach ($kelasRules as $k) {
             $jumlah = (int) $k->jumlah_kelas;
-            $namaJurusan = strtoupper($k->jurusan->alias ?? $k->jurusan->nama ?? '');
+            $namaJurusan = strtoupper(!empty(trim($k->jurusan->alias ?? '')) ? trim($k->jurusan->alias) : ($k->jurusan->nama ?? ''));
             for ($i = 1; $i <= $jumlah; $i++) {
                 $romawi = $this->toRoman((int) $k->kelas);
                 $kelasList[] = trim("{$romawi} {$namaJurusan} {$i}");

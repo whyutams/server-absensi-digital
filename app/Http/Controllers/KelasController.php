@@ -192,7 +192,7 @@ class KelasController extends Controller
                     'jumlah_kelas' => $k->jumlah_kelas,
                     'jurusan' => $k->jurusan->nama ?? null,
                     'jurusan_id' => $k->jurusan_id ? (string) $k->jurusan_id : null,
-                    'nama_kelas' => $this->toRoman($k->kelas) . ' ' . strtoupper($k->jurusan->alias ?? $k->jurusan->nama) . ' ' . $i
+                    'nama_kelas' => $this->toRoman($k->kelas) . ' ' . strtoupper(!empty(trim($k->jurusan->alias ?? '')) ? trim($k->jurusan->alias) : ($k->jurusan->nama ?? '')) . ' ' . $i
                 ];
             }
         }

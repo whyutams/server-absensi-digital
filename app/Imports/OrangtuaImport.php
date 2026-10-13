@@ -144,6 +144,19 @@ class OrangtuaImport
             }
         }
 
+        if ($this->totalRows === 0) {
+            return [
+                'status' => 'error',
+                'message' => 'Berkas Excel tidak memiliki baris data.',
+                'summary' => [
+                    'total_rows' => 0,
+                    'valid_rows' => 0,
+                    'invalid_rows' => 0,
+                ],
+                'errors' => [],
+            ];
+        }
+
         // Mode Commit: Simpan data valid ke database
         if (!$this->preview && !empty($validDataToInsert)) {
             DB::transaction(function () use ($validDataToInsert) {

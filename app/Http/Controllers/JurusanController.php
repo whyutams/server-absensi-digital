@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Jurusan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class JurusanController extends Controller
 {
@@ -64,9 +65,15 @@ class JurusanController extends Controller
     {
         $validated = $request->validate([
             'nama' => 'required|string|unique:jurusans,nama',
-            'alias' => 'required|string|unique:jurusans,alias',
+            'alias' => 'nullable|string|unique:jurusans,alias',
             'deskripsi' => 'nullable|string',
         ]);
+
+        if (isset($validated['alias'])) {
+            $validated['alias'] = trim($validated['alias']) !== '' ? trim($validated['alias']) : null;
+        } else {
+            $validated['alias'] = null;
+        }
 
         if (Auth::check()) {
             $validated['created_by'] = Auth::id();
@@ -112,9 +119,13 @@ class JurusanController extends Controller
 
         $updateData = [
             'nama' => $request['nama'] ?? $jurusan->nama,
-            'alias' => $request['alias'] ?? $jurusan->alias,
             'deskripsi' => $request['deskripsi'] ?? $jurusan->deskripsi,
         ];
+
+        if ($request->has('alias')) {
+            $aliasVal = trim($request['alias'] ?? '');
+            $updateData['alias'] = $aliasVal !== '' ? $aliasVal : null;
+        }
 
         if (Auth::check()) {
             $updateData['updated_by'] = Auth::id();
