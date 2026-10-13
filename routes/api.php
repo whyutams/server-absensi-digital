@@ -56,6 +56,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/users/import/orangtua', [UserController::class, 'import_excel_orangtua'])->name('users.import.orangtua');
         Route::apiResource('/jurusan', JurusanController::class)->names('jurusan');
         Route::apiResource('/users', UserController::class)->names('users');
+        Route::match(['put', 'post'], '/users/{user}', [UserController::class, 'update'])->name('users.update.post');
         Route::apiResource('/kelas', KelasController::class)->parameters(['kelas' => 'kelas'])->names('kelas');
         Route::post('/kelas/list/generate', [KelasController::class, 'generate_list_aturan_kelas'])->name('kelas.list.generate');
     });
