@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\OrangtuaTemplateExport;
+use App\Imports\OrangtuaImport;
 use App\Models\User;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class UserController extends Controller
 {
@@ -201,5 +204,30 @@ class UserController extends Controller
             'status' => 'success',
             'message' => 'Data berhasil dihapus.',
         ]);
+    }
+
+    /**
+     * Unduh template berkas Excel untuk import data akun orang tua
+     */
+    public function export_template_orangtua()
+    {
+        return Excel::download(new OrangtuaTemplateExport(), 'template_import_orangtua.xlsx');
+    }
+
+    /**
+     * Import akun orang tua dari berkas Excel (mendukung preview/dry-run)
+     */
+    public function import_excel_orangtua(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:xlsx,xls',
+            'preview' => 'nullable',
+        ]);
+
+        $preview = filter_var($request->input('preview', false), FILTER_VALIDATE_BOOLEAN);
+        $importer = new OrangtuaImport($preview);
+        $result = $importer->import($request->file('file'));
+
+        return response()->json($result);
     }
 }

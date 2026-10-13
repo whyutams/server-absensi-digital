@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\SiswaTemplateExport;
+use App\Imports\SiswaImport;
 use App\Models\Siswa;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class SiswaController extends Controller
 {
@@ -161,5 +164,30 @@ class SiswaController extends Controller
             'status' => 'success',
             'message' => 'Data berhasil dihapus.'
         ]);
+    }
+
+    /**
+     * Unduh template berkas Excel untuk import data siswa
+     */
+    public function export_template()
+    {
+        return Excel::download(new SiswaTemplateExport(), 'template_import_siswa.xlsx');
+    }
+
+    /**
+     * Import data siswa dari berkas Excel (mendukung preview/dry-run)
+     */
+    public function import_excel(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:xlsx,xls',
+            'preview' => 'nullable',
+        ]);
+
+        $preview = filter_var($request->input('preview', false), FILTER_VALIDATE_BOOLEAN);
+        $importer = new SiswaImport($preview);
+        $result = $importer->import($request->file('file'));
+
+        return response()->json($result);
     }
 }

@@ -48,6 +48,8 @@ class GeneralController extends Controller
                 $siswa = Siswa::with(['jurusan', 'orangtua'])->where('jurusan_id', Auth::user()->jurusan_id)->latest()->get();
             }
 
+            $userOrangtua = User::with('siswa:id,orangtua_id,nama,kelas,nis')->where('role', User::ROLE_ORANGTUA)->latest()->get();
+
             $data = [
                 'data' => [
                     'kelas' => $kelas,
@@ -55,7 +57,7 @@ class GeneralController extends Controller
                     'keterlambatan' => $keterlambatan,
                     'perizinan' => $perizinan,
                     'siswa' => $siswa,
-                    'user_orangtua' => User::where('role', User::ROLE_ORANGTUA)->latest()->get(),
+                    'user_orangtua' => $userOrangtua,
                 ],
                 'counts' => [
                     'total_kelas' => count($kelas),
@@ -63,10 +65,12 @@ class GeneralController extends Controller
                     'total_keterlambatan' => count($keterlambatan),
                     'total_perizinan' => count($perizinan),
                     'total_siswa' => count($siswa),
-                    'total_user_orangtua' => count(User::where('role', User::ROLE_ORANGTUA)->latest()->get()),
+                    'total_user_orangtua' => count($userOrangtua),
                 ],
             ];
         } else if (Auth::user()->role == User::ROLE_SUPERADMIN || Auth::user()->role == User::ROLE_KEPSEK) {
+            $userOrangtua = User::with('siswa:id,orangtua_id,nama,kelas,nis')->where('role', User::ROLE_ORANGTUA)->latest()->get();
+
             $data = [
                 'data' => [
                     'kelas' => $kelas,
@@ -76,7 +80,7 @@ class GeneralController extends Controller
                     'siswa' => $siswa,
                     'user' => $user->latest()->get(),
                     'user_guru' => User::with(['jurusan'])->where('role', User::ROLE_GURU)->latest()->get(),
-                    'user_orangtua' => User::where('role', User::ROLE_ORANGTUA)->latest()->get(),
+                    'user_orangtua' => $userOrangtua,
                     'user_satpam' => User::where('role', User::ROLE_SATPAM)->latest()->get(),
                 ],
                 'counts' => [
@@ -87,7 +91,7 @@ class GeneralController extends Controller
                     'total_siswa' => count($siswa),
                     'total_user' => count($user->latest()->get()),
                     'total_user_guru' => count(User::with(['jurusan'])->where('role', User::ROLE_GURU)->latest()->get()),
-                    'total_user_orangtua' => count(User::where('role', User::ROLE_ORANGTUA)->latest()->get()),
+                    'total_user_orangtua' => count($userOrangtua),
                     'total_user_satpam' => count(User::where('role', User::ROLE_SATPAM)->latest()->get()),
                 ],
             ];

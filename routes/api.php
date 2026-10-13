@@ -52,10 +52,17 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead']);
 
     Route::middleware(['role:' . User::ROLE_SUPERADMIN . ',' . User::ROLE_KEPSEK])->group(function () {
+        Route::get('/users/export/template/orangtua', [UserController::class, 'export_template_orangtua'])->name('users.export.template.orangtua');
+        Route::post('/users/import/orangtua', [UserController::class, 'import_excel_orangtua'])->name('users.import.orangtua');
         Route::apiResource('/jurusan', JurusanController::class)->names('jurusan');
         Route::apiResource('/users', UserController::class)->names('users');
         Route::apiResource('/kelas', KelasController::class)->parameters(['kelas' => 'kelas'])->names('kelas');
         Route::post('/kelas/list/generate', [KelasController::class, 'generate_list_aturan_kelas'])->name('kelas.list.generate');
+    });
+
+    Route::middleware(['role:' . User::ROLE_GURU_PIKET . ',' . User::ROLE_KESISWAAN . ',' . User::ROLE_BK  . ',' . User::ROLE_SUPERADMIN . ',' . User::ROLE_KEPSEK])->group(function () {
+        Route::get('/siswa/export/template', [SiswaController::class, 'export_template'])->name('siswa.export.template');
+        Route::post('/siswa/import', [SiswaController::class, 'import_excel'])->name('siswa.import');
     });
 
     Route::middleware(['role:' . User::ROLE_GURU . ',' . User::ROLE_GURU_PIKET . ',' . User::ROLE_KESISWAAN . ',' . User::ROLE_BK . ',' . User::ROLE_SUPERADMIN . ',' . User::ROLE_KEPSEK])->group(function () {
