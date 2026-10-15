@@ -7,6 +7,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 
 class OrangtuaImport
@@ -24,7 +25,16 @@ class OrangtuaImport
 
     public function import(UploadedFile $file): array
     {
-        $sheets = Excel::toArray(null, $file);
+        // Hindari bug PHP 8.4/Windows pada Maatwebsite Excel (TemporaryFile.php fopen getRealPath() == false)
+        // dengan menyimpan file sementara ke storage disk lokal, lalu dibaca melalui disk 'local'.
+        $tempPath = $file->store('temp-imports', 'local');
+        try {
+            $sheets = Excel::toArray(null, $tempPath, 'local');
+        } finally {
+            if ($tempPath && Storage::disk('local')->exists($tempPath)) {
+                Storage::disk('local')->delete($tempPath);
+            }
+        }
         if (empty($sheets) || empty($sheets[0])) {
             return [
                 'status' => 'error',
